@@ -102,3 +102,8 @@ The Skyzen license does not override third-party licenses. In particular, `docs/
 - `requirements.txt` — Python dependencies
 - `setup.bat`, `run.bat`, `silent.vbs` — Windows setup and launch
 - `docs/THIRD_PARTY_AUDIT.md` — third-party review checklist
+
+
+## Screenshots
+
+![Skyzen video editor interface](docs/images/skyzen-demo.png)
