@@ -1,0 +1,17 @@
+SKYZEN PATCH 12 — SPEED CURVE, KEYFRAME VISIBILITY, VOLUME AUTOMATION
+
+Base: Patch 11 Timeline Toolbar + Keyframe Curves
+
+CHANGES
+1. Kept the embedded Speed curve canvas inside the Inspector's Speed tab. It remains resizable with the right panel, supports dragging points, and retains the larger curve editor dialog.
+2. Added keyframe diamonds directly on the selected timeline clip for the currently selected Inspector property only. Diamonds use clip-local keyframe times and repaint as the playhead moves.
+3. Added property-focus tracking: clicking/focusing a setting or its keyframe button selects that property's timeline diamonds without changing the selected clip.
+4. Enabled keyframe buttons for volume, chroma-key controls, and crop controls as well as transform and color-grading settings.
+5. Preserved the selected clip while scrubbing; timeline playhead movement refreshes keyframe overlays instead of clearing selection.
+6. Added volume keyframe data to render snapshots and FFmpeg audio filter expressions so clip volume automation can be rendered over time for audio clips and embedded video audio.
+7. Preserved existing timeline editing actions and curve action; no timeline core or playback architecture rewrite was made.
+
+VALIDATION
+- Python compile checks passed for changed modules.
+- Automated test suite: 143 passed, 3 skipped.
+- GUI interaction, visual scaling on multiple window sizes, and real-world audio playback should still be manually checked on Windows before calling this fully verified.

@@ -1,0 +1,5 @@
+SKYZEN PATCH 16 — INDEPENDENT AUDIO/MAIN PINNING
+
+Main video pins to the bottom of the timeline viewport when its natural row would otherwise be below the visible area. The first populated audio lane uses a separate top-sticky rule: it stays in normal flow until scrolling would move it above the top track boundary, then pins there. Audio no longer reserves space beneath Main, which caused Main to float higher than the bottom edge.
+
+The shared row geometry continues to drive the timeline canvas, layer labels, edit gutter, and hit-testing. Existing media, trim, speed curve, keyframe, playback, and effect logic is unchanged.

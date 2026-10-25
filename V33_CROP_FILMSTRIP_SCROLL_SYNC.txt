@@ -1,0 +1,12 @@
+Skyzen V33 — Crop preview strip and timeline scroll synchronization
+
+Changes:
+- Added a compact crop-dialog filmstrip with a playhead and draggable range boundaries beneath the crop canvas.
+- Reworked vertical scroll range alignment to calculate each side content height against its own viewport and the master timeline viewport, then synchronize after layout.
+- Kept track content as the master vertical scroll position; wheel/scrollbar changes originating from the layer labels or edit gutter are normalized to the same offset.
+- Reviewed OpenCut's original apps/web/src/timeline/hooks/use-scroll-sync.ts and use-initial-scroll-bottom.ts. OpenCut synchronizes track-label vertical scroll to the timeline track viewport and initializes at the bottom when tracks are ready.
+
+Limitations:
+- The filmstrip is a lightweight visual preview; for video it repeats the cached source thumbnail rather than decoding a full sequence of frames. It is not a playback/scrubbing engine.
+- A true pixel-perfect copy of OpenCut is not possible by directly copying React/TypeScript into PySide6; this patch ports the scroll-sync behavior and visual layout pattern.
+- No live GUI test was available in this environment.

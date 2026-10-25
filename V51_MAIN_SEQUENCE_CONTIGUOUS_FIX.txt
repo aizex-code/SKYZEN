@@ -1,0 +1,19 @@
+SKYZEN V51 — MAIN SEQUENCE CONTIGUOUS FIX
+
+Based on the user's uploaded V50 archive.
+
+Changes
+- Main video lane is now treated as a sequential base edit, not a free-form overlay lane.
+- Reordering or inserting a clip on the main lane reflows every main-lane clip consecutively from frame 0 using exact frame durations.
+- Main-lane clips cannot retain old gaps after another main clip is moved, inserted, or reordered.
+- Dropping over an existing main-lane clip uses the shared exact start/end boundary resolver: left half inserts before; right half inserts after.
+- Main-lane drag preview now models the same packed sequence as the final drop, rather than the generic overlay ripple preview.
+- Moving a non-anchor clip away from the main lane closes the resulting gap in the main sequence.
+- The compatibility move_clip_to_track method delegates to the canonical move_clip_object path to avoid competing placement logic.
+- Overlay lanes retain free-form positioning and existing ripple insertion behavior.
+- Main lane remains the structural base lane starting at frame 0; the first main clip is still prevented from being moved to an overlay lane.
+
+Validation
+- Python compilation passed for the changed timeline modules.
+- pytest: 108 passed, 3 skipped.
+- Windows GUI drag-and-drop behavior has not been manually exercised in this environment. Test on a copy of the project before replacing the previous build.

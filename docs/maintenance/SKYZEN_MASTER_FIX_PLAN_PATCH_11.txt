@@ -1,0 +1,30 @@
+SKYZEN MASTER FIX PLAN — PATCH 11
+=================================
+Baseline: Skyzen V43 Patch 10 Speed / Keyframes
+Goal: restore the complete timeline toolbar, keep the speed graph visible in the Speed inspector, make easing curves edit the transition between keyframes, and improve timeline/tool-library controls without replacing the timeline engine.
+
+PATCH 11 COMPLETED
+------------------
+[done] Restored the full timeline toolbar by reusing the existing basic toolbar builder. Undo, redo, crop, frame peek, split, delete, trim-left, trim-right, zoom slider, and zoom readout remain present. Added a compact Keyframe Curve action next to clip edit actions.
+[done] Reworked the shared curve canvas so speed graphs and keyframe easing graphs use the same reusable graph component.
+[done] Added an always-visible speed curve canvas under the Playback Rate control. Dragging graph points updates the clip's speed curve and recomputes timeline duration. The numeric speed control continues to set constant speed.
+[done] Keyframe Curve now edits easing on the keyframe segment containing the playhead (or nearest available segment), instead of moving keyframe times/values. Linear, Ease in, Ease out, Ease in-out, Hold, and Custom Bezier are available.
+[done] Added cubic Bezier easing storage/evaluation for keyframes. The same cubic y interpolation is emitted into FFmpeg expressions for export.
+[done] Enabled keyframe diamonds for scale, X/Y/Z position, rotation, opacity, and the supported color-grading controls. Export expressions now animate scale, position, rotation, and opacity alongside color grading.
+[done] Improved the layer visibility glyph to a larger eye-like visible/hidden state and updated the left tool strip and asset thumbnail card proportions toward the supplied CapCut reference.
+[done] Preserved existing media, audio, trim, split, speed curve, and tool-layer data structures.
+
+PATCH 11 VALIDATION
+-------------------
+- Python compilation passed for the project.
+- pytest: 143 passed, 3 skipped.
+- FFmpeg smoke render with animated scale, opacity, rotation, X/Y position, and animated grading passed.
+- Custom Bezier keyframe easing is covered by regression tests.
+- PySide6 is not installed in the patching environment; actual Windows GUI interaction still requires user testing.
+
+KNOWN LIMITATIONS / NEXT
+------------------------
+- Variable-speed audio continues to use average speed for the curve path; fully time-varying pitch-preserving audio is a later audio-engine task.
+- Keyframes are currently exposed for transforms and color-grading controls. Crop, chroma-key, audio volume, and arbitrary effect parameters do not yet have keyframe diamonds.
+- The graph UI uses fixed X handles and editable Y handles for custom easing, so the graph and runtime interpolation stay consistent without a costly Bezier X inversion on every frame.
+- Next work should focus on GUI validation, polish, then a measured native C/C++ performance core. Do not replace stable Python/Qt UI code before profiling.

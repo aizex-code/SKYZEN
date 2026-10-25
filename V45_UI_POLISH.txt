@@ -1,0 +1,11 @@
+Skyzen V45 - focused UI polish
+
+Changes
+- Moved the existing live project/source dB meter to the left of the timecode, matching the requested control order: meter, timestamp, play/pause, ratio, fullscreen.
+- Reduced the meter segment width, height, and spacing by approximately half so it consumes less preview-toolbar space. Meter calculation and playback update loop were not changed.
+- Increased the Main video lane from 50 px to 66 px while keeping overlay lanes at 50 px. Main clips use the taller lane's available height.
+- Updated shared row geometry, sticky-main positioning, layer labels, track canvas, clip geometry, and content-height calculations to use the same per-row height policy. The main row remains pinned through the existing synchronized scrolling implementation.
+
+Safety
+- No video engine, playback engine, import pipeline, export pipeline, trim math, or project serialization code was intentionally changed.
+- Regression checks: 98 passed, 3 skipped.

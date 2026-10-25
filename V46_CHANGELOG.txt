@@ -1,0 +1,19 @@
+Skyzen V46 - Media Bin and Main-Lane Polish
+
+Focused changes based on V45; existing playback, video engine, timeline trimming, audio meter, and synchronized scrolling architecture are preserved.
+
+Media browser
+- Reduced imported-media cards from 138x118 to 128x92 and thumbnail height from 76 px to 40 px.
+- Moved the add (+) action out of the thumbnail and beside the media-type metadata, increasing its size to 28x22 for a clearer, more professional control.
+- Added a Yours button for media imported through Import. Yours displays the imported collection independently from a folder currently being browsed.
+- Kept folder browsing isolated from imported media. The Media tab displays video, image, and audio items; the Audio tab filters either the current folder or Yours collection to audio only.
+- Importing files switches to Yours so newly imported assets are immediately visible. Cancelling the import dialog does not change the current browser view.
+- Refresh and remove actions preserve the separation between imported items and folder contents.
+
+Timeline
+- Removed the extra 8 px sticky-main bottom gap so the pinned main lane sits flush against the bottom edge of the timeline viewport and continues to render above overlay rows.
+
+Validation
+- Python compile checks passed for the edited modules.
+- Existing regression suite: 98 passed, 3 skipped.
+- A live GUI startup could not be verified in this build environment because PySide6 is not installed here. Please launch on the target Windows machine and check import, folder/Yours switching, audio filtering, and timeline scrolling.

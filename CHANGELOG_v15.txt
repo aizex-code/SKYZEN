@@ -1,0 +1,28 @@
+SKYZEN V15 — SYNCHRONIZED SINGLE-COMPOSITE PLAYBACK
+==================================================
+
+Playback fixes
+--------------
+1. Timeline Play no longer launches a separate QMediaPlayer for every active
+   video/audio clip. It builds one low-resolution FFmpeg composite in a worker,
+   then plays that MP4 through the existing Qt player.
+2. All active visual layers and the audio mix now share one media clock, avoiding
+   independent decoder start-time drift, frame-copy overhead, and competing
+   audio devices on modest PCs.
+3. Timeline position and play/pause state follow the composite player's actual
+   position/state. Seeking during playback updates the composite player.
+4. Completed project previews are cached by project signature and reused until
+   the timeline changes. Original source files and final export settings remain
+   untouched.
+5. Preview audio follows the existing default: main video soundtrack plus
+   dedicated audio tracks; overlay video soundtracks are muted by default.
+6. Updated the playback docs and regression tests to match this architecture.
+
+Validation
+----------
+25 pure-Python regression tests pass. Python compileall passes. An FFmpeg smoke
+project containing a main video/audio source, an overlapping video, and a
+separate audio track rendered to a valid 640x360 MP4 with both video and audio
+streams. PySide6 is not installed in this build environment, so actual Qt/Windows
+gui playback and audio-device behavior could not be exercised here; the app must
+still be tested on the target PC.

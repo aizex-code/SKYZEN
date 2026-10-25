@@ -1,0 +1,62 @@
+SKYZEN UI / EDITING SPECIFICATION
+=================================
+
+Scope
+-----
+This document records the current UI refinement pass. It is not a promise that
+every advanced feature listed for future work is already implemented.
+
+Current UI changes in this build
+--------------------------------
+1. Inspector top space is reduced by hiding its redundant title strip. Property
+   tabs are the first visible controls. The selection metadata row remains hidden
+   unless existing selection logic explicitly shows it.
+2. A Crop action is available in the timeline toolbar. It switches to the
+   inspector's Basic tab and scrolls to the existing Crop controls.
+3. A Frame Peek action toggles the existing independent preview marker. This
+   marker does not replace or move the main project playhead.
+4. The Layers header has a compact view dropdown:
+   - Both: overlay and audio lanes are visible.
+   - Overlays: overlay/effect/media/image/text/adjustment lanes are visible;
+     audio lanes are hidden from the timeline view.
+   - Audio: audio lanes are visible, overlay lanes are hidden, and Main is
+     pinned at the top of the track viewport.
+   Hiding lanes here is a UI-only operation; hidden clips still participate in
+   playback and export.
+5. Timeline thumbnail loading now detects image media from file extension when
+   older project metadata has a missing or differently-cased kind field.
+
+Existing behavior retained
+--------------------------
+- Python / PySide6 UI and FFmpeg media pipeline.
+- Original media is retained for export; proxies are disposable editing copies.
+- Existing timeline selection, trimming, split/delete, undo/redo, and project
+  data model are retained.
+- CPU-only operation remains supported; GPU is not required.
+
+Known limitations / next engineering steps
+------------------------------------------
+- Crop action currently focuses the existing numeric crop controls. A direct
+  draggable crop rectangle over the preview, with handles and Apply/Cancel,
+  still needs a dedicated preview overlay implementation and validation.
+- The preview marker uses the existing marker behavior; frame-accurate
+  playback/preview synchronization should be verified interactively on Windows.
+- The current playback engine still uses FFmpeg composite preview renders.
+  Adaptive proxies, caching, and worker scheduling help, but this is not yet a
+  GPU-native real-time compositor.
+- Runtime GUI validation should be performed on a Windows desktop with actual
+  video, image, and audio media. Automated GUI tests are skipped in headless
+  environments.
+
+Manual verification checklist
+-----------------------------
+[ ] Launch with run.bat on Windows.
+[ ] Import video, image, and audio.
+[ ] Add each media type to timeline and confirm thumbnail/waveform appearance.
+[ ] Switch Layers between Both, Overlays, and Audio; confirm lane layout and
+    that hidden lanes still play/export.
+[ ] Select a clip and press Crop; confirm Basic > Crop is shown.
+[ ] Change crop values and verify preview/export.
+[ ] Toggle Frame Peek and drag the preview marker; verify the main playhead
+    remains independent.
+[ ] Test scrolling, zooming, split, trim, undo/redo, playback, and export.

@@ -1,0 +1,25 @@
+SKYZEN V43 — PATCH 09 CHANGELOG
+Title: Compact Tool Catalogs + Typed-Layer Drag/Trim Fixes
+
+BASELINE
+- Built from the user-uploaded Skyzen V43 Patch 08 CapCut Tool Library Fix ZIP.
+- Existing media/audio/import/playback/export architecture was preserved.
+
+CHANGES
+1. Text library simplified to one Basic title card.
+2. Effects library reduced to four options: Blur, Shake, Glow, Vignette.
+3. Added Filters tool icon/library with four editable timeline filter layers: Cinematic, Vintage, Mono, Teal & Orange.
+4. Adjustment library reduced to one Adjustment Layer preset; project/local scope remains configurable in the inspector.
+5. Added FFmpeg processing for blur, shake and filter looks. Filters are represented as timeline effects and do not appear as fake visible PNG overlays.
+6. Enabled typed-tool drops in the top drop zone and overlay insertion gaps, so the first tool clip can be dragged in before any typed lane exists.
+7. Fixed compact typed clip geometry to use the exact row height. This prevents clip widgets from extending outside their compact row and interfering with drop/trim hit-testing.
+8. Typed generated-image assets now use finite source bounds for trim operations, allowing frame-based trimming from both edges and restoration to their original range.
+9. Removed hover tooltips from timeline clips and track labels, including the transient duration popup during trimming.
+10. Increased typed layer height by 1 px while retaining the compact half-height design.
+
+VALIDATION
+- Python compileall: passed.
+- pytest: 127 passed, 3 skipped (see final test output for exact count).
+- FFmpeg filter smoke tests: blur, shake, cinematic EQ, vintage color balance, and monochrome passed.
+- ZIP integrity checked during packaging.
+- A Windows GUI session was not available in this patch environment; manual drag/drop, trim, preview, and export checks remain required.

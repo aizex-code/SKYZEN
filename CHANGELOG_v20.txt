@@ -1,0 +1,13 @@
+SKYZEN V20 — CONCAT REFERENCE PRESERVATION + STARTUP DIAGNOSTICS
+================================================================
+
+- Preserved the supplied Concat core and media Rust files byte-for-byte under
+  docs/concat_reference/core and docs/concat_reference/media.
+- Documented the exact conceptual mapping to Skyzen's existing Python/FFmpeg
+  modules and clearly marked unimplemented Concat features as future work.
+- Updated run.bat to report missing Python/PySide6 and warn about missing
+  FFmpeg/FFprobe before launching, rather than failing without useful guidance.
+- Updated documentation to describe the current architecture honestly.
+
+No Rust source was inserted into the active runtime. Existing timeline,
+playback, audio mixing, preview and export code paths remain in place.

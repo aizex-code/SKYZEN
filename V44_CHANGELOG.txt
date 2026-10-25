@@ -1,0 +1,11 @@
+SKYZEN V44 — CapCut-style pinned Main layer, segmented dB meter, first-media rule
+Built on V43 (symmetric gaps).
+1. Main layer pinned to the bottom of the track view while overlays scroll behind it;
+   joins the scroll flow at the end so the bottom gap shows. Labels follow identically.
+   Hit-testing uses the displayed (pinned) Main position.
+2. First visual media always becomes Main at 0:00 (also via insert-gap drops); the sole
+   Main clip cannot be moved off 0:00 and left-trim keeps it anchored (magnetic head).
+3. dB meter redrawn as CapCut's compact two-column segmented meter, placed after the timecode.
+   Play/Pause centred.
+4. Main row: darker band with top rule; video clips teal.
+Tests: stale source-contract tests updated for the SyncedColumn scroll design/inspector popup fix.

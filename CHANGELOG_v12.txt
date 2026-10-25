@@ -1,0 +1,31 @@
+SKYZEN V12 — REALTIME MULTITRACK + SYNCHRONIZED LAYERS
+======================================================
+
+Playback
+--------
+- Removed the full-project composite render from the Play path.
+- Added a live playback engine that opens Qt Multimedia players only for clips
+  active at the current playhead.
+- Added a shared QVideoSink-based compositor for multiple video/image layers.
+- Video frames are painted in the same bottom-to-top order used by the timeline
+  snapshot, with scale, position, rotation, and opacity applied in the preview.
+- Active audio sources are started at their timeline offsets. Players are
+  stopped and released when clips leave the active stack or playback pauses.
+- Paused scrubbing continues to render a single still frame with FFmpeg in the
+  background. Export settings and FFmpeg export remain separate.
+- This is a realtime preview path, not a promise of perfect playback on every
+  codec/GPU. Several simultaneous high-resolution sources may drop frames.
+
+Timeline alignment
+------------------
+- A scroll gesture from any of the timeline canvas, layer sidebar, or edit
+  gutter now becomes the source of truth and synchronizes the other columns.
+- The existing sticky main-track placement policy is preserved.
+
+Validation
+----------
+- Python AST parsing and py_compile checks.
+- Existing 13 pure-Python regression tests.
+- FFmpeg tests for still-frame and offline export command generation.
+- GUI/runtime playback could not be executed in this build environment because
+  PySide6 is not installed. Test real playback on Windows before relying on it.

@@ -1,0 +1,26 @@
+Skyzen V52 — Main Sequence, Settings & Playback Polish
+
+Changes based on the V51 project provided by the user:
+
+1. Main-lane external media drops now use the main-sequence insertion rule,
+   not the overlay ripple-placement path. A drop selects a before/after slot
+   based on the pointer frame and clip midpoint; the main lane is normalized
+   from frame zero after insertion so its clips are contiguous by frame.
+2. The external-media drag preview uses the same insertion-index helper as the
+   commit path. It shows the inserted clip and the expected reflow positions.
+3. The large empty working zone above the first visible timeline lane uses the
+   same charcoal palette as the lane backgrounds instead of near-black navy.
+4. Timeline zoom wheel sensitivity, horizontal pan speed, vertical layer scroll
+   speed, preview quality, and proxy generation can be changed from a Settings
+   button beside Menu. Values are saved with QSettings and persist between runs.
+5. Project-preview still debounce reduced from 160 ms to 110 ms and project
+   composite prefetch delay reduced from 1100 ms to 450 ms to reduce the wait
+   after timeline edits. Composite rendering still depends on CPU speed and
+   project complexity; this change does not promise real-time rendering on all
+   machines.
+
+Validation performed:
+- Python compileall passed.
+- pytest: 108 passed, 3 skipped.
+- Actual Windows GUI drag/drop and playback responsiveness were not automated
+  or verified in this environment; user should test on a copy of their project.

@@ -1,0 +1,48 @@
+Skyzen V47 — Trim Edge Affordances, Ripple Insert, and Drag Preview
+
+Base
+----
+Built from the user-provided Skyzen V46 archive. Existing project structure,
+playback engine, trim math, pinned main lane, audio meter, and synchronized
+scrolling were kept in place.
+
+Timeline trim controls
+----------------------
+- Enlarged the edge hit zones to match the visible left "</" and right "/>"
+  trim affordances, making the trim controls easier to discover and grab.
+- The cursor changes to horizontal resize at either edge and to an open hand in
+  the body; the closed-hand cursor is used while actively dragging.
+- Trim duration/source-bound calculations remain in the existing frame-domain
+  trim implementation.
+
+Ripple insertion
+----------------
+- Dropping external media onto an existing compatible layer now inserts it at
+  the requested timeline time. If the clip would overlap an existing clip, the
+  collided clip and the sequence to its right shift to make room while
+  preserving the gaps between displaced clips.
+- If the inserted clip fits entirely in an existing gap, clips to the right do
+  not move unnecessarily.
+- Moving an existing timeline clip follows the same insertion/ripple behavior.
+- Added a pure helper at app/timeline_insert_math.py and regression tests for
+  empty tracks, adequate gaps, insufficient gaps, and clips spanning the
+  insertion point.
+
+Live drag preview
+-----------------
+- Existing clip drags show a dashed destination preview and outlines showing
+  where affected clips will move.
+- Dragging an existing clip over a layer-insertion gap previews a new compatible
+  overlay/audio layer. The layer is created only when the drop is committed.
+- External file/imported-media drags over a compatible layer preview the clip
+  position and the expected ripple destinations. Leaving/cancelling clears the
+  preview without modifying the timeline.
+- The first Main clip remains anchored in the Main lane; it cannot be dragged
+  out into a newly created overlay layer.
+
+Validation
+----------
+- Python compilation passed for the modified timeline modules.
+- Full regression suite: 102 passed, 3 skipped.
+- PySide6 is not installed in the build environment, so interactive GUI behavior
+  still needs verification on the target Windows PC.

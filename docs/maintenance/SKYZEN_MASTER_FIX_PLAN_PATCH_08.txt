@@ -1,0 +1,37 @@
+SKYZEN MASTER FIX PLAN — UPDATED FOR PATCH 08
+
+PROJECT RULES
+- Preserve the existing PySide6/FFmpeg architecture and root main.py/run.bat.
+- Make targeted modular changes; do not rewrite unrelated editor components.
+- Keep Main as the structural base video track. Text, Effects and Adjustments are typed overlays, never Main media.
+- Keep media/audio drag-and-drop, trimming, playback, undo/redo and export as regression checks for every patch.
+- Keep patch notes and verified history inside docs/maintenance in every release ZIP.
+
+CURRENT PATCH 08 SCOPE
+[Implemented in code; GUI verification pending]
+- Compact CapCut-inspired Text/Effects/Adjustments preset cards.
+- Responsive 2/3-column library grid, with scaled preview images and visible + button.
+- Dragging a typed preset onto Main uses Main only as a placement reference and creates a typed overlay lane.
+- Timeline insertion gaps use a dark workspace-matched background and subtle hover highlight.
+- Typed track height remains controlled by shared app/timeline_panel/track_layout.py.
+
+NEXT PRIORITIES
+1. Windows GUI validation of Patch 08 and fix any regressions before adding features.
+2. Ensure all tool presets can be dragged from the library and added with +, and typed layers remain separate from Main.
+3. Speed controls: clip speed UI, source-time mapping, preview/export parity, and audio tempo behavior.
+4. Keyframe model and property keyframe navigation; then graph/easing editor.
+5. Save/reopen persistence for typed tool metadata and settings, if not yet covered by the active project format.
+6. Broader effects/adjustment controls only after speed/keyframe foundation is stable.
+
+REGRESSION GATES FOR EVERY PATCH
+- App startup and media import.
+- Audio import/drop remains below Main and does not crash.
+- Video clips play on the preview.
+- Frame-accurate trim left/right and trim-back behavior.
+- Overlays remain above Main; Main remains the base track.
+- Typed layers can be selected, moved, trimmed, edited and rendered.
+- Undo/redo and export.
+- Python compilation, ZIP integrity, and GUI launch on Windows.
+
+KNOWN VALIDATION LIMITATION
+PySide6 is not installed in the current patching environment. Compilation can be checked here, but GUI behavior must be verified on the user's Windows system before marking it runtime-verified.

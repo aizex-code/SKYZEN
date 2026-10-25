@@ -1,0 +1,17 @@
+SKYZEN VERIFIED FIX HISTORY — PATCH 12
+
+AUTOMATED CHECKS COMPLETED
+- `python -m py_compile app/inspector_panel/main.py app/timeline_panel/core.py app/video_engine/project_snapshot.py app/video_engine/ffmpeg_backend.py app/timeline_panel/toolbar/toolbar.py app/curve_editor.py` passed.
+- `python -m pytest -q --disable-warnings --maxfail=1` passed: 143 passed, 3 skipped.
+
+IMPLEMENTED
+- Inspector property selection drives which keyframe diamonds appear on the selected timeline clip.
+- Keyframe marker repaint is triggered by playhead movement.
+- Volume, crop, and chroma properties have keyframe controls enabled.
+- Volume keyframes are included in render snapshots and are expressed as per-frame FFmpeg audio volume automation.
+- Speed curve canvas remains inline in the Speed tab with a larger editor available.
+
+NOT CLAIMED AS VERIFIED YET
+- Full interactive GUI testing on Windows.
+- Native live-preview audio volume automation; export-side FFmpeg automation is implemented, but preview behavior must be listened to and confirmed.
+- Final visual polish across different screen sizes and DPI settings.

@@ -1,0 +1,29 @@
+SKYZEN V14 — NATIVE SINGLE-CLIP PLAYBACK + STABILITY
+====================================================
+
+Focused fixes
+-------------
+1. One ordinary main-track video uses PlayerPanel's native QMediaPlayer and
+   QVideoWidget, avoiding Python-side QVideoSink frame copying for the simplest
+   and most common editing case.
+2. Overlapping clips continue to use LiveCompositeView.
+3. Timeline stack updates no longer force the source-video widget over the
+   project composite surface.
+4. Removed frequent wall-clock correction seeks from the live engine. Sources
+   are positioned on activation and explicit seek only, reducing decoder flushes
+   and audio/video stutter.
+5. Video-overlay audio is muted by default in composite mode. The main-track
+   soundtrack and dedicated audio tracks remain audible.
+6. Video frames are queued to the GUI thread and scaled to at most 1280x720
+   before storage in the compositor.
+7. Direct-playback media loading reapplies the clip's source in-point after Qt
+   reports the media is ready.
+8. Updated architecture documentation to describe the actual current playback
+   path rather than the older full-project-render design.
+
+Validation
+----------
+50 Python files passed AST parsing and py_compile. 22 pure-Python regression
+tests passed. FFmpeg is available for paused-frame smoke tests in the build
+environment. PySide6 is not installed here, so the native Windows GUI and audio
+device behavior could not be run or verified in this environment.

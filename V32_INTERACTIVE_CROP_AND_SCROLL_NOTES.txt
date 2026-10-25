@@ -1,0 +1,13 @@
+Skyzen V32 — interactive crop and panel cleanup
+
+Implemented:
+- Crop is removed from the right inspector's Basic properties area.
+- The timeline toolbar Crop button opens a dedicated Crop dialog for a selected video/image.
+- The dialog provides a preview, draggable crop rectangle/corner handles, rule-of-thirds guides, aspect-ratio presets (Free, Original, 16:9, 9:16, 4:3, 3:4, 1:1, 4:5), Reset, Cancel and Apply.
+- Apply stores normalized crop values in the selected clip and refreshes the timeline preview.
+- The existing TimelineScrollCoordinator was inspected: timeline, layer sidebar and edit gutter all use one synchronization coordinator and aligned logical scroll ranges. This patch does not rewrite that core because the source already implements synchronized scrollbar values; any remaining visible drift needs a runtime reproduction.
+
+Limitations:
+- For videos, the crop dialog displays the existing cached thumbnail when available rather than a live moving frame.
+- Crop values are stored and sent through the existing active-clip refresh path; actual export/preview crop rendering depends on the current compositor honoring crop_left/top/right/bottom.
+- No PySide6 GUI/playback test was possible in this patch environment. Python syntax compilation is not equivalent to end-to-end validation.

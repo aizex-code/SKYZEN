@@ -1,0 +1,29 @@
+SKYZEN VERIFIED FIX HISTORY — PATCH 09
+
+BASELINE
+- User-uploaded Skyzen V43 Patch 08 ZIP.
+
+CODE-LEVEL FIXES / CHECKS
+- One Basic title preset is present.
+- Four effect presets are present: Blur, Shake, Glow, Vignette.
+- Four filter presets are present and route through the effect/render pipeline.
+- One adjustment preset is present; the existing inspector scope selector is retained.
+- Typed tool MIME payloads are accepted by timeline video rows, the top drop zone, and overlay insertion gaps.
+- Typed assets are routed to separate V-based overlay tracks; the Main track is not reused as a typed track.
+- Typed row height and clip widget geometry share the same row-height calculation.
+- Typed generated PNGs are frame-bounded for trim gestures rather than treated as unbounded still images.
+- Clip and track-name hover tooltips are removed; trim no longer shows a floating duration tooltip.
+- FFmpeg smoke checks passed for gblur, rotate-based shake, eq, colorbalance and hue filters.
+
+TEST RESULT
+- pytest: 127 passed, 3 skipped.
+- Python compileall: passed.
+- FFmpeg filter smoke tests: passed.
+
+NOT YET VERIFIED ON USER'S WINDOWS PC
+- GUI drag-and-drop into the first available lane and insertion gaps.
+- Visual trim handles and restore-to-original-endpoint behavior.
+- Real-time preview refresh and final export appearance for Filters/Shake.
+- Regression check of media import, audio placement, autosave and project reopening.
+
+Do not describe the GUI as fully verified until the manual Windows checklist has been completed.

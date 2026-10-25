@@ -1,0 +1,22 @@
+SKYZEN V21 — FASTER PREVIEW PREP + TRANSFORM / COLOR GRADING
+===========================================================
+
+- Reduced edit-settle pre-render debounce from 900 ms to 250 ms, so the
+  current timeline composite starts preparing sooner and Play can reuse a
+  warmed cache more often.
+- Added an indeterminate cyan processing bar for composite playback preparation.
+- Added a top-bar activity indicator while source proxies are being built.
+- Added live inspector controls for brightness, contrast and saturation.
+- Included color-grade values in project fingerprints, render snapshots and
+  preview-cache signatures so edits invalidate stale preview frames.
+- Applied FFmpeg `eq` grading in the common composite path, which is used for
+  preview and final export.
+- Made Z position visibly affect depth in the current 2D compositor using a
+  bounded perspective-scale approximation. This is not a true 3D camera system.
+- Kept source media untouched; proxies remain background editing copies.
+
+Performance note:
+The composite is still rendered before synchronized multitrack playback. The
+progress bar makes that work visible and earlier pre-rendering should reduce
+waits, but exact startup time depends on source codecs, project length, disk
+speed and CPU. This change does not promise a fixed 4–7 second render time.

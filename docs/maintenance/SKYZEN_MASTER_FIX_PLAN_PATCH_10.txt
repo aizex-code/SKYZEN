@@ -1,0 +1,41 @@
+SKYZEN MASTER FIX PLAN — PATCH 10
+=================================
+Baseline: Skyzen V43 Patch 09 Tool Library / Trim Fix
+Goal: add real speed retiming, editable speed curves, and keyframe easing while preserving the existing media/audio/timeline workflows.
+
+PATCH 10 COMPLETED
+------------------
+[done] Added app/animation.py: frame-snapped keyframe storage, deduplication, linear/ease-in/ease-out/ease-in-out/hold interpolation, speed-curve integration, inverse speed mapping, split helpers, and trim/split keyframe maintenance.
+[done] Added app/curve_editor.py: dark graph dialog with draggable points; speed curves use 0.1x–4x and easing curves can edit keyframe time/value plus a segment easing preset.
+[done] Replaced the Speed placeholder with a working constant-speed control and an Edit speed curve button in the Inspector.
+[done] Constant speed retimes clip duration while preserving its source span. Video source timestamps are remapped in FFmpeg; audio uses an atempo chain. Speed curve audio uses the average rate for a stable initial implementation.
+[done] Speed curves are integrated into FFmpeg setpts using a high-resolution AVTB timebase. Constant and variable speed export smoke tests both rendered 2-second outputs successfully.
+[done] Live playback bypasses the native 1x fast path for retimed/keyframed clips, applies Qt playback rate for constant speed, and updates rate from the speed curve while tracking source time.
+[done] Added optional keyframe diamonds to the ten color-grading controls: brightness, contrast, saturation, gamma, hue, temperature, tint, highlights, shadows, vibrance. Diamonds are disabled for unrelated transform/audio/crop controls to avoid advertising unsupported animation.
+[done] Added a timeline toolbar Keyframe Curve action. It prompts for a property when multiple animated properties exist, then opens the graph editor to change keyframe times/values and the ease mode.
+[done] Brightness/contrast/saturation/gamma keyframes export as per-frame FFmpeg expressions. Hue keyframes use FFmpeg's expression-capable hue filter. Temperature/tint/highlights/shadows/vibrance animate through an approximate EQ mapping while animated; static grading continues to use the existing colorbalance/vibrance processing.
+[done] Single-frame scrub previews evaluate all keyframed grade properties at the playhead.
+[done] Speed-aware edge trims and split logic preserve source-time mapping for constant speed; speed curves are split into normalized sub-curves. Keyframe times are shifted/clamped when trimming and split at the cut point when splitting.
+[done] Made the layer visibility icon larger and eye-like, reduced the left timeline layer header from 156 px to 138 px, and removed tooltips from clip/layer controls that obscured editing.
+[done] Added regression tests for keyframe math, speed curve integration, FFmpeg filter construction, speed-aware trimming, and source duration.
+
+VALIDATION
+----------
+- Python compileall: passed.
+- Automated suite: 141 passed, 3 skipped.
+- FFmpeg smoke render: constant 2x speed with animated grade passed; variable speed curve with animated grade passed; both outputs were 2.000 seconds.
+- FFmpeg project-wide animated adjustment smoke render: passed.
+- Qt GUI launch was not available in the patching environment because PySide6 is not installed. Windows GUI interactions still require user verification.
+
+KNOWN LIMITATIONS / NEXT WORK
+-----------------------------
+- Speed curve audio currently follows the average curve rate, not time-varying audio time-stretch. A later audio engine pass can segment the curve for exact audio ramps.
+- Keyframed temperature/tint/highlights/shadows/vibrance use an approximate dynamic EQ mapping during animation; static controls retain the existing color-balance/vibrance filters. A future compositor pass can make animated grading mathematically identical to static grading.
+- Transform/crop/opacity/volume keyframe animation is intentionally not exposed yet; the first keyframe implementation is scoped to color-grading controls.
+- Test the GUI on Windows before using the patch as the only working copy. Keep Patch 09 as rollback.
+
+NEXT MILESTONE
+--------------
+1. Verify Speed constant/curve changes, timeline length, playback, split and both-edge trim in the Windows GUI.
+2. Verify each grading diamond at two or more playhead positions and use Keyframe Curve to edit easing.
+3. Then improve inspector layout and continue with advanced curve/keyframe workflow.

@@ -1,0 +1,1 @@
+"""Clip property inspector panel."""

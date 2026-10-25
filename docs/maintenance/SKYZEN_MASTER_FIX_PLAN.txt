@@ -1,0 +1,69 @@
+SKYZEN — MASTER FIX PLAN
+Current baseline supplied by user: Skyzen V43 Stability Patch 05 (audio placement confirmed working in Windows GUI).
+Current development release: Patch 07 — Real Text / Effects / Adjustment Tool Layers.
+
+PROJECT RULES
+- Make small, isolated patches; do not mix unrelated bug fixes into feature work.
+- Preserve each previous ZIP and never overwrite the user's baseline.
+- Keep existing application module locations unless a migration is planned and tested.
+- New tools belong under app/left_toolbar/<tool_name>/; do not overload app/left_panel/main.py with tool implementation details.
+- Remove generated __pycache__, .pyc, and .pytest_cache artifacts from release ZIPs.
+- Update this plan, the patch changelog, and verified-fix history in every release ZIP.
+- Mark a feature GUI-verified only after the user confirms it or a repeatable live GUI test proves it.
+- Run Python compilation and the full available test suite after every patch.
+- Never report a GUI test as completed when PySide6 is unavailable.
+- Keep Windows, PySide6, FFmpeg, and low-end CPU compatibility in mind.
+
+VERIFIED / USER-REPORTED CORE WORKFLOWS
+[USER-REPORTED WORKING] Frame-stable left/right trimming and restoring trimmed source range; live GUI regression checks still recommended.
+[USER-CONFIRMED WORKING] Patch 05 audio drop does not crash; music creates an audio lane below Main, with waveform visible.
+[USER-CONFIRMED WORKING] Main video remains above audio; overlays remain above Main.
+
+PRIORITY 1 — TOOL LIBRARY AND TYPED LAYERS (PATCH 07)
+[IMPLEMENTED; AUTOMATED TESTS PASS; GUI CHECK PENDING] 1. Add compact responsive Media / Audio / Text / Effects / Adjustments toolbar with a chevron overflow menu for narrow panels.
+[IMPLEMENTED; AUTOMATED TESTS PASS; GUI CHECK PENDING] 2. Separate left-toolbar tool modules under app/left_toolbar/{media_tool,audio_tool,text_tool,effect_tool,adj_tool}/.
+[IMPLEMENTED; AUTOMATED TESTS PASS; GUI CHECK PENDING] 3. Replace placeholder tool presets with searchable thumbnail cards and an obvious + button on each thumbnail.
+[IMPLEMENTED; AUTOMATED TESTS PASS; GUI CHECK PENDING] 4. Support dragging Text / Effects / Adjustments preset cards onto overlay lanes using a dedicated MIME payload.
+[IMPLEMENTED; AUTOMATED TESTS PASS; GUI CHECK PENDING] 5. Add real typed clip models that share the existing video-overlay lane/trim/move/selection/history infrastructure.
+[IMPLEMENTED; AUTOMATED TESTS PASS; GUI CHECK PENDING] 6. Use half-height rows for typed tool layers and keep icon / clip / header colors consistent.
+[IMPLEMENTED; AUTOMATED TESTS PASS; GUI CHECK PENDING] 7. Render text presets as transparent PNG visual clips; expose editable text, font size, and color in the inspector.
+[IMPLEMENTED; FFmpeg SMOKE TEST PASSED; GUI CHECK PENDING] 8. Apply effect presets to visual layers beneath their lane during the effect clip's active interval.
+[IMPLEMENTED; FFmpeg SMOKE TEST PASSED; GUI CHECK PENDING] 9. Support local adjustment layers and whole-project adjustment layers; project scope is applied after visual compositing.
+[OPEN] 10. Verify tool clip save/reopen behavior in the actual Windows application; this build uses the current in-memory project model and has no separate full project-file workflow in this baseline.
+[OPEN] 11. Expand text controls (font family, alignment, outline, shadow, animation) only after base text rendering is confirmed.
+[OPEN] 12. Expand effects library and add preview thumbnails / additional render effects only after timing and export parity are confirmed.
+[OPEN] 13. Add HSL / curves / LUT workflow to adjustment layers after base local/project grading is confirmed.
+
+PRIORITY 2 — TIMELINE SPACING AND GHOST LAYERS
+[OPEN] 14. Reduce overlay insertion gaps to 2–3 px without changing outer workspace padding.
+[OPEN] 15. Show a full-row ghost-layer preview while media/tool presets are dragged over an insertion gap.
+[OPEN] 16. Create permanent layers only after a valid drop; preserve shared row geometry and sticky Main/audio behavior.
+[OPEN] 17. Verify row labels, clip hit-testing, scrolling, ruler and layer canvas alignment after half-height typed rows.
+
+PRIORITY 3 — STABILITY AND CORRECTNESS
+[OPEN] 18. Reproduce the black-frame/clip-boundary issue; verify half-open [start, end) selection where appropriate.
+[OPEN] 19. Audit paint and mouse handlers for exceptions without hiding programming errors using blanket catches.
+[OPEN] 20. Re-test trim, move, split, undo/redo and audio drop after tool-layer changes.
+[OPEN] 21. Verify all new typed layers render identically in preview and export on Windows FFmpeg.
+
+PRIORITY 4 — PERFORMANCE (MEASURE FIRST)
+[OPEN] 22. Profile timeline paint and multi-layer preview on the target PC.
+[OPEN] 23. Add background thumbnail/waveform work and bounded caches only where profiling supports it.
+[OPEN] 24. Evaluate dirty-region repainting and viewport culling with visual regression checks.
+[OPEN] 25. Benchmark proxy GOP settings, frame cache, and preview-quality downgrade before changing defaults.
+[OPEN] 26. Consider render cache only with correct invalidation and separate preview/export quality.
+
+STRUCTURE POLICY
+- Preserve existing app/left_panel, app/timeline_panel, app/inspector_panel, and app/video_engine interfaces.
+- New left-toolbar assets, preset catalogs and typed-layer helpers stay under app/left_toolbar/.
+- Keep maintenance records under docs/maintenance/.
+- Historical README/changelog files remain unless a separately tested cleanup is approved.
+- Release cleanup removes generated bytecode/test caches only; never delete project source or user assets.
+
+PATCH 07 CHECKPOINT
+- Media and Audio continue using existing import / thumbnail / drag-drop pathway.
+- Text preset generates a real transparent full-frame PNG, which enters the normal visual compositor as a typed Image clip.
+- Effects and Adjustment clips are typed visual-stack objects but are not passed as fake media inputs to FFmpeg; supported effects and project/local adjustments are applied by the render graph.
+- Text/Effects/Adjustments use half-height rows, matching icon/layer colors, and a dedicated tool MIME type.
+- Automated verification: 126 passed, 3 skipped; Python compileall passed; FFmpeg project and frame smoke renders passed.
+- PySide6 unavailable in the patching environment. Actual Windows GUI testing is pending user confirmation.

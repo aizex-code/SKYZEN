@@ -1,0 +1,35 @@
+SKYZEN MASTER FIX PLAN — PATCH 09
+Baseline: User-supplied Skyzen V43 Patch 08 ZIP
+
+PATCH 09 SCOPE (COMPLETED IN CODE; WINDOWS GUI VALIDATION PENDING)
+1. Simplify tool libraries:
+   - Text: one Basic title preset.
+   - Effects: Blur, Shake, Glow and Vignette.
+   - Filters: add a separate toolbar icon and four filter presets (Cinematic, Vintage, Mono, Teal & Orange).
+   - Adjustments: one Adjustment Layer preset; choose project-wide/local scope in the inspector.
+2. Keep all non-media presets draggable and addable with the + button.
+   - Typed tool assets are accepted by video rows, the top drop zone and overlay insertion gaps.
+   - Main is only a placement target; typed assets are created on separate overlay tracks.
+3. Fix compact typed lane geometry.
+   - Typed rows are one pixel taller than the prior half-height rule.
+   - Clip geometry uses the exact shared row height, preventing clip widgets from extending outside their row and interfering with first-lane hit-testing.
+4. Fix trim boundaries for generated tool clips.
+   - Generated PNG tool assets are treated as finite-duration source objects during trimming, so left/right trim is frame-bounded and can be restored up to the original source range.
+5. Remove timeline hover tooltips from clips and track labels.
+   - No path/start/duration popup should obscure the timeline while hovering or trimming.
+6. Keep ordinary media, audio, Main track, preview, autosave, and export architecture unchanged.
+
+NEXT MILESTONES
+- Validate Patch 09 GUI interactions on Windows before extending the feature set.
+- Then implement Speed settings and frame-accurate keyframes with graph/easing editing.
+- Do not refactor the playback engine or timeline architecture as part of those UI upgrades unless a reproducible bug requires it.
+
+MANUAL CHECKLIST
+[ ] First-ever Text/Effect/Filter/Adjustment preset can be dragged onto the empty timeline/top drop zone.
+[ ] Dropping onto Main creates a separate overlay lane and does not place tool assets on Main.
+[ ] Dragging onto an overlay insertion gap creates a typed lane at the dropped time.
+[ ] + adds the selected preset at the playhead.
+[ ] Trim both edges frame-by-frame; trim back to the original endpoints without jumping/shrinking unexpectedly.
+[ ] Play/scrub through trimmed tool clips; verify the preview and export.
+[ ] No hover popup appears over clips or track labels.
+[ ] Media import, music below Main, undo/redo, save/reopen, and export still work.

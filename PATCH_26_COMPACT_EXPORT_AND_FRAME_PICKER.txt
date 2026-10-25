@@ -1,0 +1,14 @@
+SKYZEN PATCH 26 — COMPACT EXPORT DIALOG + MANUAL PROJECT FRAME PICKER
+
+Changes
+- Reduced export dialog dimensions, margins, content width, and form spacing.
+- Frame rate is now a single row: the FPS preset dropdown is always visible, and the numeric FPS box appears beside it only for Custom… mode.
+- Thumbnail is now a single row: the thumbnail dropdown shows Choose image… only for Custom image, Select frame… only for Current project frame, and no extra button for None.
+- Added a manual project-frame picker with a timeline-time slider, precise time entry, composed-frame preview, and Use this frame confirmation.
+- The selected project time is passed to the export worker, and remembered in QSettings with the other export settings.
+- Kept the existing main.py entry point, modular app structure, export worker, and timeline implementation unchanged.
+
+Validation
+- Python compileall completed successfully.
+- Automated test suite: 153 passed, 3 skipped.
+- PySide6 is not installed in the build environment, so the live Qt dialog and FFmpeg frame-picker UI could not be launched here; test the UI on Windows.

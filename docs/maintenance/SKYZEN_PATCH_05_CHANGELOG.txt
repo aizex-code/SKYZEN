@@ -1,0 +1,35 @@
+SKYZEN PATCH 05 CHANGELOG — AUDIO DROP STABILITY AND TRACK ORDER
+Baseline: Skyzen V43 Stability Patch 04
+Status: Automated tests and compilation pass; live Windows/PySide6 verification pending.
+
+CHANGES
+1. Normalized media kinds case-insensitively at the track/model boundary so Audio/audio cannot be misclassified as a video track.
+2. Added audio-only insertion gaps directly below the Main lane. Overlay insertion gaps accept visual media only, preventing music from entering the overlay insertion workflow. The general top/bottom media drop targets still accept audio and route it to the audio stack below Main.
+3. Corrected audio insertion-slot calculation to use the audio stack rather than a global displayed row index.
+4. Positioned the first populated audio lane directly below the sticky Main lane and reserved viewport space for both rows to avoid overlap while scrolling. The shared row geometry is used by the timeline and layer headers.
+5. Bounded audio waveform pixmap allocation and tiled the waveform across the clip, avoiding large pixmap allocations for long/high-zoom audio clips.
+6. Added guarded drag/drop commits and diagnostic logging to logs/timeline_drop_errors.log where possible.
+7. Added pure geometry regression tests for audio-lane placement and sticky behavior.
+
+FILES CHANGED
+- app/timeline_panel/core.py
+- app/timeline_panel/track_layout.py
+- app/timeline_panel/left_layers_panel/layers.py
+- tests/test_audio_layer_layout.py
+- docs/maintenance/SKYZEN_MASTER_FIX_PLAN.txt
+- docs/maintenance/SKYZEN_VERIFIED_FIX_HISTORY.txt
+
+VERIFICATION
+- `python -m compileall -q app tests`: passed.
+- `python -m unittest discover -s tests -q`: 88 passed, 3 skipped (91 total).
+- PySide6 is unavailable in the patching environment; actual Windows drag/drop and scroll interaction have not been run here.
+
+USER TEST CHECKLIST
+[ ] Drag an MP3/WAV/M4A from the media panel into an audio gap or bottom layer target; app remains open.
+[ ] New audio lane appears directly below Main, not above it.
+[ ] Overlay lanes remain above Main.
+[ ] With multiple audio lanes, the first audio lane stays directly below Main during vertical scrolling.
+[ ] Drag video/image onto an overlay gap; it still creates an overlay lane.
+[ ] Drag audio onto an overlay gap; it is rejected rather than creating an overlay.
+[ ] Play the project and confirm the added music is audible and aligned with the playhead.
+[ ] Check logs/timeline_drop_errors.log if a drop is rejected or fails.

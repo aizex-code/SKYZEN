@@ -1,0 +1,17 @@
+Skyzen V34 — Crop playback, cleaner media drag, and layer sync
+
+Changes:
+- Crop dialog video previews now use QMediaPlayer + QVideoSink. The source video can play/pause, frames update the crop canvas, and the crop-dialog playhead/seek slider follows the actual media position.
+- Crop filmstrip clicks/dragging seek the actual source video instead of only moving a decorative playhead. Preview audio is muted to avoid unexpected audio while cropping.
+- Media-bin cards no longer switch the player to source-preview mode on mouse-down. A plain click previews; a drag starts a timeline drag without first switching preview modes. Added a clear drag hotspot.
+- Clip name and duration are drawn directly over the clip with 60% opacity; removed the opaque title strip.
+- Layer scroll range alignment now uses the timeline content widget's actual height instead of the model's estimated height, then synchronizes side columns after layout.
+
+Reference analysis:
+- Reviewed OpenCut's use-scroll-sync.ts: timeline track scroll is the vertical source and track-label scroll follows the same offset; horizontal ruler and track content are synchronized separately.
+- Skyzen retains its separate Qt scroll areas, so the implementation uses aligned scroll ranges and a shared coordinator rather than copying React/TypeScript literally.
+
+Validation:
+- All Python files passed py_compile.
+- Targeted tests passed: test_track_layout.py, test_video_engine.py, test_audio_and_import_regressions.py (33 passed).
+- GUI playback/scrolling still needs a live Windows smoke test; tests do not prove the native Qt multimedia backend works on every codec/system.

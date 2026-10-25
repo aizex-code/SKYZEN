@@ -1,0 +1,33 @@
+Skyzen v18 — Stable Composite Playback
+======================================
+
+Playback core
+- Removed the dormant legacy per-clip decoder engine from the active controller.
+- Kept one project playback clock: the composite QMediaPlayer's timeline position.
+- Pause now holds the loaded composite frame when valid instead of scheduling
+  another frame-render job immediately.
+- Play/Pause remains explicit; selecting a source or timeline clip does not call
+  play().
+
+Compositing
+- Kept Concat-style bottom-to-top layer ordering in Skyzen's immutable snapshot.
+- Normalized transform offsets across preview and export dimensions.
+- Retained background FFmpeg render worker and cache for multitrack composite.
+- Main video soundtrack and dedicated audio tracks share one composite audio mix.
+
+UI
+- Tuned the theme toward the screenshot's neutral charcoal/gray and cyan palette.
+- Kept the UI shell separate under app/ui/.
+
+Testing
+- Added regression tests for the single active playback owner, pause-frame
+  preservation, and resolution-scaled transform offsets.
+- Made proxy-cache tests hermetic instead of writing to shared temp state.
+
+Cache correctness
+- Include the actual selected render input's file stamp in the preview signature,
+  so regenerated proxies cannot reuse a stale composite.
+
+Playback controls
+- Fullscreen preserves the existing play/pause state, and in timeline mode it
+  displays the project composite/paused still rather than the selected source clip.

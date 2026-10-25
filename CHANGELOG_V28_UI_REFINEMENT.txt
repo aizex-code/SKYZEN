@@ -1,0 +1,22 @@
+SKYZEN V28 — UI REFINEMENT PASS
+================================
+
+- Reduced inspector header clutter so property tabs start at the top.
+- Added a timeline Crop action that focuses the existing crop controls.
+- Exposed the independent Frame Peek marker in the timeline toolbar.
+- Added a Layers view dropdown for Both / Overlays / Audio.
+- Audio-only view pins the Main lane to the top.
+- Hardened image thumbnail kind detection for older project metadata.
+- Added editing.txt with current behavior, known limitations, and a manual test
+  checklist.
+
+Validation
+----------
+- Python compileall: passed.
+- pytest: 77 passed, 3 skipped.
+
+Important
+---------
+Crop toolbar action currently focuses the numeric crop controls; direct
+interactive crop handles on the preview are not claimed as complete in this
+build. The app still needs interactive Windows GUI validation with real media.

@@ -1,0 +1,23 @@
+SKYZEN V17 — STARTUP HOTFIX + PLAYBACK CORE CHECKS
+================================================
+
+Startup crash fixed
+--------------------
+- Imported Qt in app/main_window/main.py. The shortcut installer uses
+  Qt.FocusPolicy.StrongFocus and Qt.ShortcutContext.WidgetWithChildrenShortcut;
+  without the import, EditorMainWindow crashed before the window could show.
+- Added regression tests so this exact NameError cannot silently return.
+
+Core behavior retained
+----------------------
+- Space / the preview Play button are the explicit project playback controls.
+- Project playback uses one cached FFmpeg-composited preview file in one Qt player,
+  so video layers and mixed audio share a clock instead of racing independent decoders.
+- Paused scrubbing uses background-rendered still frames; preview generation is not
+  performed on the UI thread.
+- UI remains separated into app/ui/editor_layout.py and app/ui/theme.py.
+
+Verification limitations
+------------------------
+- Unit tests and Python compilation are run in the build environment.
+- The actual Qt desktop launch must still be verified on Windows with PySide6 installed.

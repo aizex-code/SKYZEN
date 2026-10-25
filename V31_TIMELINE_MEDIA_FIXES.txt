@@ -1,0 +1,16 @@
+Skyzen V31 — targeted timeline/media fixes
+
+Implemented:
+- Still images are inserted with a default 5.0-second timeline duration.
+- Image/video/audio clips retain the existing edge-trim/resize interaction; image duration is stored in the clip model and is not a fixed thumbnail-only value.
+- Media-bin cards are smaller, use a contain-fit thumbnail, and show the + action as a bottom-right overlay on the thumbnail.
+- Removed the inspector's redundant clip filename/type metadata strip.
+
+OpenCut source review:
+- The provided OpenCut source has dedicated timeline resize/drag-drop controllers and timeline scroll-sync hooks. Its still-image behavior is documented as five-second still clips.
+- Skyzen uses a separate PySide6 implementation; this patch ports the observable behavior, not OpenCut's React/TypeScript code.
+
+Not claimed as complete:
+- The screenshot's interactive crop rectangle/handles are not yet implemented by this patch; the existing Crop button still focuses the inspector's numeric crop controls.
+- Scroll sync wiring was reviewed but not broadly rewritten in this patch because Skyzen already routes wheel gestures through the shared timeline vertical scrollbar; a full UI run is needed to reproduce any remaining scrollbar-drag mismatch.
+- No live PySide6 GUI/playback test was run in this environment.

@@ -1,0 +1,11 @@
+{
+  "theme": "Dark",
+  "background": "#101116",
+  "panel": "#171922",
+  "text": "#F3F5F7",
+  "muted": "#969CAB",
+  "accent": "#8B5CF6",
+  "hover": "#A78BFA",
+  "border": "#2B2E3A",
+  "trash_retention_days": 30
+}

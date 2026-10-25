@@ -1,0 +1,32 @@
+SKYZEN MASTER FIX PLAN — PATCH 12
+
+GOAL
+Restore a clean, consistent workflow for Speed curves and keyframe editing without regressing existing timeline actions.
+
+DONE IN THIS PATCH
+[✓] Keep the Speed curve visible inside the Inspector Speed tab.
+[✓] Keep the larger Speed curve editor available.
+[✓] Draw keyframe diamonds on the selected clip itself.
+[✓] Display only the active Inspector property's keyframes.
+[✓] Preserve selected clip while scrubbing the playhead.
+[✓] Enable keyframe controls for volume, crop, and chroma settings.
+[✓] Pass clip volume keyframes to the render snapshot and use a per-frame FFmpeg volume expression.
+[✓] Preserve existing timeline toolbar actions and zoom control.
+[✓] Run syntax checks and automated tests.
+
+MANUAL QA STILL REQUIRED
+[ ] Launch the app on Windows and confirm the Speed graph resizes naturally when the Inspector width changes.
+[ ] Add multiple speed points, scrub, save/reopen the project, and confirm the curve remains intact.
+[ ] Select a clip, click a property, add two keyframes, and verify only that property's diamonds are shown.
+[ ] Scrub across keyframes and verify the same clip remains selected and Inspector values update.
+[ ] Test volume keyframes on an audio clip and on a video clip with embedded audio; listen during preview and after export.
+[ ] Test undo/redo after editing a keyframe or curve.
+[ ] Confirm the toolbar still exposes crop, frame peek, split, delete, trim-left, trim-right, undo, redo, zoom, and keyframe curve.
+
+NEXT PATCH CANDIDATES
+- Improve live-preview audio automation if native playback does not follow volume keyframes smoothly.
+- Add visual tests for keyframe marker positions at high zoom and very short clips.
+- Add serialization regression coverage for curve/keyframe save and reopen.
+
+RULE
+Do not refactor unrelated timeline, trim, import, playback, or layer layout code while addressing these items. Patch one isolated behavior at a time and run the full test suite after every change.

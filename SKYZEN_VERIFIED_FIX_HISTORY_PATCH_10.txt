@@ -1,0 +1,31 @@
+SKYZEN VERIFIED FIX HISTORY — PATCH 10
+======================================
+Baseline: Patch 09
+
+VERIFIED BY AUTOMATION
+----------------------
+1. Keyframe interpolation works for linear and ease-in segments.
+2. Duplicate keyframes at the same frame are normalized to one key.
+3. Keyframe add/remove snaps to the timeline FPS.
+4. Speed curve integration correctly calculates the source span for constant and linearly varying rates.
+5. Speed curve split retains the boundary speed at both sides of the split.
+6. Keyframes shift/clamp when a clip's left edge is trimmed.
+7. FFmpeg input duration uses the source span implied by timeline duration and speed.
+8. Speed curve FFmpeg graph uses AVTB to avoid duplicate/non-monotonic timestamps at higher rates.
+9. Color-grade keyframes create per-frame FFmpeg expressions.
+10. Speed-aware left/right trim math is covered by regression tests.
+11. Live playback selects the non-native timeline decoder path for retimed/keyframed clips and applies the requested playback rate.
+11. Full FFmpeg render smoke tests passed for constant 2x speed, a variable speed curve, and animated grading. Both video smoke outputs were exactly 2.000 seconds.
+12. Project-wide adjustment keyframe smoke render passed.
+13. Full Python compilation passed; automated suite reports 141 passed and 3 skipped.
+
+NOT VERIFIED IN THIS ENVIRONMENT
+--------------------------------
+- Actual PySide6 widget rendering and Windows interaction could not be launched because PySide6 is not installed here.
+- User should test the new Speed page, speed graph, keyframe diamonds, keyframe curve toolbar, clip splitting/trimming, playback, save/reopen and final export on Windows.
+
+KNOWN FOLLOW-UP
+---------------
+- Variable speed audio follows the average speed, not a fully time-varying pitch-preserving curve.
+- Dynamic color grade properties outside brightness/contrast/saturation/gamma/hue use an approximate animated EQ mapping.
+- Transform, opacity, crop and volume keyframes are not exposed yet.

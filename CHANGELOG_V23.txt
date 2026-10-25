@@ -1,0 +1,6 @@
+SKYZEN V23
+----------
+- Removed the player-panel loading/progress strip.
+- Kept the last good frame visible while composite playback is prepared.
+- Preserved and regression-tested four-argument timeline clip selection.
+- Removed silent exception swallowing from inspector preview update.

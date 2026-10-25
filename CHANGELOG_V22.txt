@@ -1,0 +1,38 @@
+SKYZEN V22 — CENTRED ADJUSTERS, LIVE FRAME RETENTION, EXTENDED GRADING
+======================================================================
+
+Inspector
+- Added centred, bidirectional sliders with zero at the midpoint for scale,
+  X/Y/Z position, rotation, brightness, contrast, saturation, gamma, hue,
+  temperature, tint, highlights, shadows and vibrance.
+- Kept numeric spinboxes alongside sliders for precise values.
+- Scale maps slider centre to 100%; left reduces scale and right increases it.
+- Position and rotation values map symmetrically around zero.
+- Opacity remains a conventional 0–100% control.
+
+Live adjustment
+- Paused preview keeps the last good frame visible while the next frame renders.
+  The old full-screen “Preparing preview frame…” message no longer replaces
+  the image on every edit.
+- Frame cache tracking now includes the render signature, so changing a clip
+  at the same playhead timestamp still triggers a fresh frame after an in-flight
+  render finishes.
+- Project prefetch debounce increased from 250 ms to 700 ms to avoid launching
+  full composite preparation while the user is actively dragging controls.
+
+Color grading
+- Added gamma, hue, temperature, tint, highlights, shadows and vibrance controls.
+- Extended grading is part of the project fingerprint and render signature,
+  and is applied by the FFmpeg preview/export filter graph.
+
+Verification
+- 49 automated tests pass.
+- Python syntax compilation passes.
+- FFmpeg single-frame smoke render passes with extended grading enabled.
+
+Limitations
+- This environment does not include PySide6, so the actual Windows GUI could
+  not be launched here. Interactive performance and visual feel should be
+  checked on the target PC.
+- This remains a 2D FFmpeg compositor; Z is a depth-to-scale approximation,
+  not a full 3D camera transform.

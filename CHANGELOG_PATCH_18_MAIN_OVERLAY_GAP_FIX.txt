@@ -1,0 +1,24 @@
+Patch 18 — Main/overlay spacing regression fix
+
+Root cause
+- The dynamic symmetric outer workspace (up to 112 px) was included in Main's
+  sticky-position decision. With a short overlay stack, that decorative top
+  workspace could make Main appear to be below the sticky boundary even though
+  the actual overlay rows did not fill the viewport. Main then pinned to the
+  bottom and left a large blank gap after the overlays.
+
+Fix
+- Main's bottom-sticky decision now ignores the outer workspace when deciding
+  whether the real overlay stack is tall enough to require pinning.
+- Short stacks remain in natural row flow, keeping the 2–3 px insertion gap
+  between the final overlay and V1 - MAIN.
+- Tall overlay stacks still bottom-pin Main and scroll behind it.
+- Audio top-pinning behavior and shared row geometry remain unchanged.
+
+Validation
+- Full test suite: 98 passed, 3 skipped (PySide6-only tests skipped because
+  PySide6 is unavailable in this environment).
+- Added regression coverage for short stacks with a large outer workspace and
+  for tall stacks that must continue to pin Main.
+- No playback, trimming, keyframe, speed curve, inspector, or rendering code
+  was changed.

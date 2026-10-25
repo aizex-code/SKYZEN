@@ -1,0 +1,18 @@
+SKYZEN V13 — CLEAN BASIC UI
+===========================
+
+- Timeline now shows occupied overlay/audio rows only; empty saved rows no
+  longer create a stack of blank lanes. The project track data is preserved.
+- Removed decorative OVERLAYS/AUDIO section headers and insertion-gap rows from
+  the basic timeline. The row geometry remains shared by the timeline and the
+  left-side layer controls.
+- With up to four occupied video overlays, the overlay rows are laid out directly
+  above the pinned Main lane. Larger stacks start at the top and scroll naturally.
+- Removed the inactive Ratio and Fit buttons from the player controls. Kept the
+  time display, play/pause, and fullscreen controls.
+- Empty composite preview now displays a subtle “No clip at playhead” message.
+
+Validation
+----------
+Run python -m unittest discover -s tests. This archive has been syntax-checked;
+a Windows GUI run is still required to verify the Qt layout and media backend.

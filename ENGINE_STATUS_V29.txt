@@ -1,0 +1,5 @@
+Skyzen V29 Engine Foundation — audit package
+
+This package preserves the V28 codebase and adds an audited engine status + OpenCut port map. It is NOT a claim that all editor features are complete or that V29 is a fully verified release. The next implementation pass should address the active composite-render playback bottleneck, adaptive proxies/cache policy, and end-to-end media tests.
+
+See docs/ENGINE_AUDIT_V29.md and docs/OPENCUT_PORT_MAP_V29.md.

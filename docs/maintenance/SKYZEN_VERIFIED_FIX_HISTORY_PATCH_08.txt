@@ -1,0 +1,25 @@
+SKYZEN VERIFIED FIX HISTORY — PATCH 08
+
+PATCH 08: CAPCUT-STYLE TOOL LIBRARY + SAFE OVERLAY DROPS
+Date: 2026-10-22
+Baseline: Skyzen_V43_Patch_07_Tool_Layers.zip
+
+CODE CHANGES
+- app/left_toolbar/preset_card.py: compact cards, smaller preview region, smaller controls, scaled preview content.
+- app/left_toolbar/library.py: responsive 1/2/3-column layout, tighter spacing, smaller library helper text.
+- app/timeline_panel/core.py: typed tool assets are accepted over any video lane; a Main-lane drop creates a typed overlay rather than using Main as the destination track.
+- app/timeline_panel/left_layers_panel/layers.py: dark insertion-gap background and restrained hover treatment.
+- app/timeline_panel/track_layout.py unchanged; existing typed-layer half-height policy is retained.
+
+VERIFICATION STATUS
+- Python syntax compilation for app/: PASS.
+- PySide6 GUI launch: NOT RUN (PySide6 unavailable in patching environment).
+- Automated full test suite: NOT RUN for this patch.
+- Windows drag/drop and visual layout: NEEDS USER VERIFICATION.
+
+DO NOT CLAIM VERIFIED UNTIL
+- User confirms cards are sized correctly in the actual application.
+- User confirms + and drag/drop work for Text, Effects and Adjustments.
+- User confirms dropping over Main creates an overlay and does not modify Main's clip list.
+- User confirms gaps look dark and are not distracting.
+- Existing media/audio, trim, playback and export workflows still work.

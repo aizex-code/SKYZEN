@@ -1,0 +1,25 @@
+SKYZEN V43 - PATCH 01: CONFIRMED STABILITY FIXES
+
+Baseline: Skyzen_V43_Compact_Ghost_Layer_Fix(2).zip
+Scope: narrow, low-risk fixes only; no UI redesign or rendering architecture rewrite.
+
+Changes:
+1. Fixed the clip-body drag threshold path. A small pointer movement while a clip is in "move" mode no longer falls through to edge-trim calculations. This addresses the recorded ValueError: unknown trim mode: move.
+2. Normalized the audio waveform path to pathlib.Path inside audio_waveform_pixmap(). This handles string paths from clip data and addresses the recorded AttributeError on path.name that could abort Qt's paint event.
+3. Elided long clip names with an ellipsis rather than letting the label run into the clip edge. Full names remain in the clip tooltip.
+4. Hid the duration label on narrow clips where it would collide with other metadata.
+
+Verification:
+- Python compileall: passed.
+- Full available test suite: 108 passed, 3 skipped.
+- The environment used for patching does not have PySide6 installed, so live GUI testing was not possible here.
+- Playback clip selection already uses half-open ranges [start, end) in the inspected timeline and live-playback paths. No speculative change was made to that logic.
+
+Not included in this patch:
+- Drawing cache / dirty-region architecture changes
+- Render cache or proxy encoding changes
+- Keyframe / easing system
+- Auto-remux, export dialog, or settings redesign
+- Main-track pinning redesign or track geometry changes
+
+Recommended next stage: reproduce and isolate the compact ghost-layer preview / workspace gap behavior, then add targeted regression tests before changing the shared row geometry.

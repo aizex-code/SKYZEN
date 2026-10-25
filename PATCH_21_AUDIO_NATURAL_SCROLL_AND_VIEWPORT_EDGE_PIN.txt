@@ -1,0 +1,27 @@
+SKYZEN PATCH 21 — MAIN EDGE PINNING / NATURAL AUDIO SCROLL
+=========================================================
+
+Scope
+-----
+Fixes only vertical timeline display geometry and audio-row sticky behavior.
+
+Changes
+-------
+- V1 MAIN remains in its normal row position until it reaches a viewport edge.
+- Main pins to the actual bottom viewport edge while overlays scroll behind it.
+- Main pins to the actual top viewport edge while audio scrolls behind it.
+- The top drop-workspace height is no longer incorrectly added to the top pin
+  coordinate; that offset caused a visible empty band above Main while scrolling
+  through audio lanes.
+- Audio tracks, labels, and edit-gutter rows keep their natural shared row
+  coordinates. They are not independently moved or raised over Main.
+- Main remains the foreground row during overlap, and all three timeline
+  columns continue to use the same row geometry.
+- No project data, clip timing, trimming, playback, keyframes, speed curves,
+  drag/drop, or export logic was changed.
+
+Validation
+----------
+- Added regressions for audio natural-flow coordinates and top pinning when the
+  outer drop workspace is non-zero.
+- Run: python -m pytest -q

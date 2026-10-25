@@ -1,0 +1,7 @@
+Skyzen V29 Engine Foundation
+============================
+
+- Added a source-verified engine audit describing the active preview architecture and current bottlenecks.
+- Added OpenCut-to-Skyzen module mapping for timeline and renderer subsystems.
+- No engine behavior was changed in this audit-only build; it is a safe baseline for the next targeted implementation pass.
+- GUI validation was not possible in the current environment because PySide6 is unavailable.

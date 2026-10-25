@@ -1,0 +1,9 @@
+Patch 17 — Audio rows scroll behind top-pinned Main
+
+- Preserved the existing overlay/Main bottom-pinning behavior.
+- Added the inverse pinning state for the audio section: Main pins to the top
+  once its natural row scrolls above the viewport boundary.
+- Disabled independent first-audio-row pinning/foreground raising in that state
+  so multiple audio tracks scroll behind Main instead of covering it.
+- Updated geometry regression tests.
+- Test suite: 144 passed, 3 skipped.

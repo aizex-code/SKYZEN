@@ -1,0 +1,74 @@
+SKYZEN — VERIFIED FIX HISTORY
+Purpose: cumulative fix record. Separate attempted/automated-verified changes from user-confirmed GUI behavior. Carry this file forward with each release.
+
+PATCH 01 — STABILITY BASELINE
+Recorded changes from prior patch notes:
+- Guarded body clicks/tiny movement so move mode does not enter trim-only math.
+- Normalized waveform path handling.
+- Added long clip-label elision and hid duration text on narrow clips.
+Automated tests were reported as passing in that patch.
+GUI verification: not recorded.
+
+PATCH 02 — TRIM INTERACTION FIX
+Attempted changes:
+- Used stable global pointer coordinates for trim delta calculation.
+- Separated left/right trim hit zones on narrow clips.
+- Added tests for pointer-delta conversion.
+Automated verification: 110 passed, 3 skipped; compilation passed in Patch 02.
+User feedback: left trim followed by right trim could collapse a clip to a very small segment. Therefore Patch 02 trimming is NOT confirmed and its behavior is superseded by Patch 03.
+
+PATCH 03 — SEQUENTIAL TRIM SOURCE-RANGE FIX
+Attempted changes:
+- Added a safe source-length resolver based on source-in plus visible duration when source-duration metadata is absent/stale.
+- Probe media duration when possible at trim start and cache the bound for the active drag.
+- Added regression tests for left-trim then right-trim behavior under missing/stale metadata.
+Automated verification: 112 passed, 3 skipped; Python compilation passed.
+GUI verification: PENDING USER CONFIRMATION.
+
+CONFIRMATION CHECKLIST
+[ ] Left trim follows the pointer without jumping or accelerating.
+[ ] Right trim shortens and extends correctly within the real source-media range.
+[ ] Left trim followed by right trim preserves the clip and does not collapse it.
+[ ] Right trim followed by left trim behaves correctly.
+[ ] Both trim directions remain frame-accurate at different zoom levels.
+[ ] A clip cannot become shorter than one frame.
+[ ] Narrow clips allow both edges to be selected.
+[ ] Move, split, playback, undo/redo, and save/reopen still work after trimming.
+[ ] No regressions to track labels, row geometry, or drag/drop.
+
+Only check an item after live GUI testing or a repeatable integration test proves it.
+
+
+PATCH 04 — FRAME-STABLE TRIMMING AND PREVIEW REFRESH
+Attempted/implemented changes:
+- Freeze pixels-per-frame and source_in at mouse-down; derive all mouseMove updates from that original state to avoid accumulating the left-trim delta.
+- Remove the main-clip frame-zero override that could desynchronize start, duration and source_in during a left trim. The main track row itself is not moved.
+- Publish the updated active timeline stack on trim release so the preview controller invalidates the previous project snapshot and renders the current trim.
+- Add regression tests for left/right restoration, known source bounds, preview input trim values, snapshot signature changes, and trim-release synchronization.
+Automated verification: full suite 119 passed, 3 skipped; compileall passed.
+GUI verification: PENDING USER CONFIRMATION. PySide6 GUI was not launched in this environment.
+
+PATCH 04 USER TEST CHECKLIST
+[ ] Continuous left-edge drag changes one frame per frame-distance and does not accelerate/drift.
+[ ] Releasing and dragging the left edge back restores exactly the hidden source frames; the original right edge remains fixed.
+[ ] Continuous right-edge drag is smooth and frame-accurate.
+[ ] Dragging the right edge back restores source frames only up to the real source end.
+[ ] The main clip can be left-trimmed without source/timeline mismatch.
+[ ] Player preview updates after trim release and plays the exact trimmed segment.
+[ ] Undo/redo, move, split, save/reopen remain correct.
+Do not mark these as GUI-verified until the user confirms.
+
+PATCH 05 — AUDIO DROP AND PINNED AUDIO LANE
+User confirmation: CONFIRMED WORKING on 2026-10-22. User screenshot shows a visible audio waveform directly below V1 Main, with video clips remaining on Main and the app open. The immediate music-drop crash and basic placement order are user-confirmed fixed. Further multi-audio scrolling/edge-case tests remain open.
+
+PATCH 07 — REAL TEXT / EFFECTS / ADJUSTMENT TOOL LAYERS
+Implemented from the user-reuploaded Patch 05 baseline:
+- Added a modular left_toolbar package with separate Media, Audio, Text, Effects and Adjustments modules.
+- Replaced placeholder tool panels with searchable preset cards, thumbnail previews, an on-thumbnail + button, and a dedicated drag/drop payload.
+- Added typed overlay-lane clips with half-height rows and tool-matched colors.
+- Text assets are transparent PNG visual clips with inspector editing for content, font size and color.
+- Effects are applied by the FFmpeg compositor to visual layers below the effect lane during the effect's active time range.
+- Adjustment clips support local-lower-layer grading and whole-project post-composite grading.
+- Added typed-tool snapshot/signature support and regression tests.
+Automated verification: 126 passed, 3 skipped; Python compileall passed; FFmpeg full-project and frame-render smoke tests passed.
+GUI verification: PENDING USER TEST. PySide6 was unavailable in the patching environment. Do not mark toolbar appearance, GUI drag/drop, text preview, effect preview, or adjustment preview as confirmed until the user tests the Windows build.

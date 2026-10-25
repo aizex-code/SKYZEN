@@ -1,0 +1,12 @@
+Skyzen V26
+----------
+- Fixed mouse-wheel spinbox behavior: numeric values only change when the
+  pointer is over the focused number field.
+- Increased adjustment slider resolution by 10x and numeric precision to 3
+  decimals.
+- Implemented sampled-color chroma key in the FFmpeg preview/export compositor.
+- Added key enable, screen eyedropper, color tolerance, edge softness, and
+  foreground opacity controls.
+- Added chroma settings to edit fingerprints and preview cache signatures.
+- Increased preview encode quality to CRF 27 and versioned the preview cache.
+- Reduced inspector spacing and improved initial workspace/timeline proportions.

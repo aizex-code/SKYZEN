@@ -1,0 +1,63 @@
+SKYZEN PATCH 07 CHANGELOG — REAL TOOL LIBRARIES AND TYPED LAYERS
+Baseline: user re-uploaded Skyzen V43 Stability Patch 05.
+Purpose: replace the nonfunctional placeholder tool panels with real preset cards and shared timeline-layer integration while preserving existing Media/Audio paths.
+Status: Python compilation, automated tests, and FFmpeg graph smoke renders pass. Windows/PySide6 GUI verification is pending.
+
+CHANGES
+1. Added app/left_toolbar/ with separate media_tool, audio_tool, text_tool, effect_tool, and adj_tool modules.
+2. Rebuilt the left toolbar as compact Media / Audio / Text / Effects / Adjustments buttons, with a chevron overflow menu for narrow panels.
+3. Added searchable, two-column preset libraries for Text, Effects, and Adjustments. Preset cards have visual previews and a + button over the thumbnail; cards also support drag-and-drop.
+4. Added a dedicated application/x-skyzen-tool-asset drag payload and timeline drop routing for typed presets.
+5. Added typed tool clips to the existing visual overlay track model. These clips retain timeline start/duration, selection, trimming, movement and undo-history behavior through the existing timeline infrastructure.
+6. Added half-height typed rows and matching Text / Effects / Adjustments colors in timeline clip surfaces and layer headers.
+7. Text presets render to transparent PNG assets. Inspector exposes text content, font size, and color; changing these regenerates the asset and refreshes the project preview.
+8. Added effect rendering for Warm Film, Cool Night, Soft Glow, Vignette, VHS, and High Contrast, active only over the effect clip's half-open time range and applied to visual layers beneath the effect lane.
+9. Added local adjustment scope (visual layers below) and whole-project scope. Whole-project grading runs after the full visual composite; supported properties include brightness, contrast, saturation, gamma, temperature and tint.
+10. Added typed-tool render snapshot metadata and cache-signature fields so edits to typed layers invalidate stale preview composites.
+11. Reused existing Media/Audio import pathways and rejected regular media drops onto typed tool lanes to avoid accidental type mixing.
+12. Added typed tool-layer regression tests for catalog IDs, snapshot separation, effect filters, and project-grade filter generation.
+
+FILES ADDED
+- app/left_toolbar/__init__.py
+- app/left_toolbar/catalog.py
+- app/left_toolbar/library.py
+- app/left_toolbar/preset_card.py
+- app/left_toolbar/assets.py
+- app/left_toolbar/media_tool/main.py
+- app/left_toolbar/audio_tool/main.py
+- app/left_toolbar/text_tool/main.py
+- app/left_toolbar/effect_tool/main.py
+- app/left_toolbar/adj_tool/main.py
+- tests/test_typed_tool_layers.py
+
+FILES UPDATED
+- app/left_panel/main.py
+- app/main_window/main.py
+- app/ui/editor_layout.py
+- app/timeline_panel/core.py
+- app/timeline_panel/track_layout.py
+- app/timeline_panel/left_layers_panel/layers.py
+- app/inspector_panel/main.py
+- app/video_engine/project_snapshot.py
+- app/video_engine/ffmpeg_backend.py
+- docs/maintenance/SKYZEN_MASTER_FIX_PLAN.txt
+- docs/maintenance/VERIFIED_FIX_HISTORY.txt
+
+VERIFICATION
+- `python -m compileall -q app tests`: passed.
+- `pytest -q --disable-warnings --maxfail=1`: 126 passed, 3 skipped.
+- FFmpeg project-render smoke test with effect + whole-project adjustment: passed.
+- FFmpeg single-frame smoke test with effect + whole-project adjustment: passed.
+- PySide6 is unavailable in the patching environment; actual GUI launch, thumbnail-card drag, text editing, timeline trimming, and export from the Windows app remain unverified.
+
+USER TEST CHECKLIST
+[ ] Left toolbar is clean, aligned and readable at the normal panel width.
+[ ] Narrowing the panel exposes Text / Effects / Adjustments from the chevron menu.
+[ ] Text, Effects and Adjustments libraries show clear preview cards with + buttons over thumbnails.
+[ ] Pressing + adds a typed layer at the playhead.
+[ ] Dragging a preset onto an overlay lane adds the layer at the drop time.
+[ ] Text clip appears in the player; editing text/size/color updates the player.
+[ ] Effect layer changes the player only during its timeline interval and affects lower visual layers.
+[ ] Local adjustment affects lower visual layers; whole-project adjustment grades the complete composite.
+[ ] Typed layers are half the height of normal overlay rows and use matching tool colors.
+[ ] Existing Media import, Audio drop, trim, playback, undo/redo, and export remain functional.

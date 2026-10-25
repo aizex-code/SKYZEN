@@ -1,0 +1,17 @@
+SKYZEN PATCH 13 — EMBEDDED SPEED CURVE
+
+Base: Patch 12 Keyframes & Volume Curve.
+Reference: Patch 10 speed curve behavior and curve editor.
+
+Changes
+- Kept the speed curve graph directly inside Inspector > Speed, below playback rate.
+- Made the graph responsive to Inspector width and reserved space for axis labels.
+- Added 0.5×–5× speed range labels and a visible Start speed label.
+- Curve edits apply when the user releases a dragged point; clicking the line adds a point.
+- Fixed live curve edits to update clip duration, timeline layout and preview together.
+- Updated speed limits in Inspector, curve normalization, live preview and export snapshot/backend to 0.5×–5×.
+- Retained the larger curve editor as an optional companion editor.
+
+Validation
+- Python syntax compilation and automated tests are run for this patch.
+- Windows GUI playback/export still requires user verification on the target PC.

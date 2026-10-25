@@ -1,0 +1,21 @@
+Skyzen V25 — Responsive Multitrack Preview & Inspector Repair
+-------------------------------------------------------------
+
+FIXED
+- Created the missing inspector selection labels that could abort clip-property
+  loading before any controls became usable.
+- Added per-clip audio volume and mute, wired through the timeline, fingerprint,
+  render snapshot, and FFmpeg audio mix.
+- Trim L / Trim R now trim to the playhead instead of removing one frame per click.
+- Cancel obsolete project preview renders when a new edit changes the signature.
+
+IMPROVED
+- Continue playing the last valid composite while an updated composite renders.
+- Refresh the paused frame at a bounded cadence while dragging inspector sliders.
+- Skip neutral grading/rotation filters to reduce FFmpeg work for unadjusted clips.
+- Compact panel margins and improve splitter stretch behavior.
+- Versioned the preview cache namespace to prevent reuse of older filter graphs.
+
+NOT YET IMPLEMENTED
+- Crop, mask shapes, chroma key, blend modes, reverse, speed retiming, HSL/curves,
+  and AI tools remain future work; the UI does not claim these controls are active.

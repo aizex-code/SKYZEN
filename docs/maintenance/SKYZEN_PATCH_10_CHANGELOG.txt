@@ -1,0 +1,32 @@
+SKYZEN V43 — PATCH 10 CHANGELOG
+===============================
+
+NEW
+---
+- Real Speed Inspector tab: 0.1x–4x constant playback rate.
+- Editable speed curve graph with draggable points and Reset to 1x.
+- Speed curve source-time integration and FFmpeg inverse timestamp mapping.
+- Live playback rate integration; retimed/keyframed clips no longer bypass the timeline decoder path.
+- Audio atempo processing for constant speed; average speed for speed-curve audio.
+- Frame-snapped keyframes for color-grading properties.
+- Keyframe Curve timeline toolbar action with property selection, editable graph points and easing presets.
+- Keyframe easing modes: Linear, Ease in, Ease out, Ease in-out, Hold.
+- FFmpeg frame-evaluated animated grade expressions and keyframe-aware scrub preview.
+
+FIXES / CLEANUP
+---------------
+- Speed edits preserve the clip's selected source span while changing timeline duration.
+- Constant-speed trim edges account for playback rate when changing source-in/source-out.
+- Splitting a speed-adjusted clip keeps source mapping and divides speed curves.
+- Trimming shifts/clamps keyframe times; splitting divides keyframe maps at the cut.
+- Increased visibility icon size and changed its glyph to a larger eye-like mark.
+- Reduced timeline layer-header width by 18 px (156 -> 138 px).
+- Removed hover tooltips from clip/layer controls to keep the timeline unobstructed.
+- Updated regression coverage for new speed/keyframe behavior.
+
+VALIDATION
+----------
+- compileall passed.
+- pytest: 141 passed, 3 skipped.
+- FFmpeg constant-speed, variable-speed-curve and animated-grade smoke renders passed (2.0-second outputs).
+- PySide6 is unavailable in the patching environment, so Windows GUI testing is pending.

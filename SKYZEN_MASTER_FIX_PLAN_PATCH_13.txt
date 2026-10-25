@@ -1,0 +1,16 @@
+SKYZEN MASTER FIX PLAN — PATCH 13
+
+Current focus
+1. Speed curve fits inside the right Inspector panel.
+2. Speed domain is 0.5×–5× in graph, numeric control, playback and export.
+3. Graph updates clip duration and timeline geometry after edits.
+4. Preserve keyframe and volume automation behavior from Patch 12.
+
+Manual QA
+- Select a video clip and open Inspector > Speed.
+- Resize the right panel and confirm no graph/label clipping.
+- Drag the start point and an interior point; confirm immediate application after release.
+- Click the line to add a point; confirm duration changes.
+- Save/reopen project and check curve persists.
+- Preview and export a curve with slow and fast sections; compare timing.
+- Test a clip split and trim after speed changes.

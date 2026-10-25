@@ -1,0 +1,46 @@
+SKYZEN V19 — AUDIO MIX + LAYER SCROLL + FAST IMPORT
+====================================================
+
+1. AUDIO ROOT CAUSE AND FIX
+- The project renderer only added embedded audio when `is_main` was true.
+  Every overlay soundtrack was therefore discarded even when its track was
+  unmuted and had volume above zero.
+- V19 now includes the embedded soundtrack from every unmuted video layer that
+  has an audio stream. Dedicated audio tracks are still mixed too.
+- Track mute and volume are read from the same immutable project snapshot used
+  by the renderer. The mix uses a stable non-normalizing sum followed by a
+  limiter to reduce clipping when multiple sources overlap.
+- FFprobe is preferred for audio stream detection; FFmpeg stream-description
+  fallback is used if FFprobe is unavailable.
+- The composite preview cache profile was bumped so v18 composites with the
+  old main-only audio mix cannot be reused.
+
+2. LAYER CONTROLS / SCROLLING
+- Layer headers and their child buttons forward wheel gestures to the shared
+  timeline vertical scroll coordinator. Scrolling over a layer's mute/lock/
+  visibility controls therefore scrolls the labels and clips together.
+- Added a matching bottom creation workspace in the sidebar and a larger
+  bottom drop area for tall layer stacks.
+- Layer volume changes now go through the timeline history/update path so the
+  composite is rebuilt with the chosen gain.
+
+3. FAST IMPORT / PREVIEW
+- One-time settings migration enables background fast proxies by default on
+  existing installations; the user can still disable this in Menu.
+- Imported and current-timeline videos are queued for proxy generation.
+- New proxies are 640x360 H.264 ultrafast + AAC, keeping audio, and never
+  modifying source files. A versioned marker invalidates older proxy files.
+- After timeline edits settle, a background composite pre-render is scheduled
+  so Play can often reuse a ready composite rather than wait for a fresh render.
+- This remains a real composite render: a long/heavy project can still take time
+  after an edit, but work is performed off the UI thread.
+
+VERIFICATION
+------------
+- 41 automated tests passed.
+- Python compilation passed.
+- FFmpeg integration smoke test rendered overlapping videos with two embedded
+  soundtracks into a valid H.264/AAC composite. ffprobe confirmed video+audio
+  streams; FFmpeg volumedetect confirmed non-silent audio output.
+- PySide6 GUI interaction was not available in the build environment, so a
+  Windows launch/scroll/mute test is still required.

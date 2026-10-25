@@ -1,0 +1,23 @@
+SKYZEN V43 — PATCH 24: EXPORT PANEL / PROGRESS / FPS / THUMBNAILS
+
+Base: Patch 21 Audio Natural Scroll Fix.
+Scope: export workflow only. Timeline pinning/layout code was not intentionally changed.
+
+Changes:
+- Added an editable project/export name field used for the default output filename.
+- Added frame-rate selection from 1 to 60 FPS and applies the selected rate to the render snapshot.
+- Added output sizes: 240p, 480p, 720p, 1080p, 1440p (marketed as 1.4K/QHD), 2K (2048x1080), and 4K UHD.
+- Added a dedicated export progress page with live FFmpeg progress, percentage, elapsed time, status text, and output path.
+- Added optional thumbnail output: current project frame or a custom image. Thumbnail is saved beside the exported video as a separate image file.
+- Added a simple creator-support message for BRONVEIL and S7XIAN during export.
+- FFmpeg work remains in a background QThread; the UI stays responsive.
+- Preserved the original-source overwrite guard.
+
+Validation performed in this environment:
+- Python compileall passed.
+- Pytest: 152 passed, 3 skipped.
+- ZIP integrity checked after packaging.
+
+Not yet validated here:
+- A full Windows GUI export on the user's machine.
+- FFmpeg output behavior with every codec/resolution combination.

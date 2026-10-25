@@ -1,0 +1,58 @@
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local secrets and machine-specific settings
+.env
+.env.*
+!.env.example
+
+# Runtime logs and temporary files
+skyzen-crash.log
+*.log
+*.tmp
+*.temp
+
+# Local project data and generated media
+project_manager/projects/*
+!project_manager/projects/.gitkeep
+!project_manager/projects/.keep
+!project_manager/projects/LICENSE.md
+!project_manager/projects/SKYZEN_FOOTPRINT.md
+project_manager/trash/*
+!project_manager/trash/.gitkeep
+!project_manager/trash/.keep
+!project_manager/trash/LICENSE.md
+!project_manager/trash/SKYZEN_FOOTPRINT.md
+cache/
+caches/
+exports/
+output/
+renders/
+proxies/
+thumbnails/
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.wav
+*.mp3
+
+# Build outputs
+build/
+dist/
+*.spec
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,31 @@
+SKYZEN V43 PATCH 20 — MAIN PIN / CENTER / AUDIO-OVERLAY SCROLL FIX
+
+Scope
+- Fixes only the shared vertical display geometry for the V1-MAIN lane.
+- Preserves the existing editor features, timeline tools, speed curve, keyframes,
+  clip trimming, media handling, and the existing shared scroll coordinator.
+
+Behavior
+- When Main would move below the visible timeline viewport, it pins to the
+  bottom edge so overlay rows scroll behind it.
+- When scrolling into the audio region moves Main above the viewport, it pins
+  to the top edge while audio rows continue their natural scroll behind it.
+- When Main is naturally between the sticky edges, it stays at its natural
+  coordinate instead of being shifted early; this avoids artificial gaps and
+  allows the Main row to sit centered with workspace above and below.
+- Pin edges are recalculated from the current timeline viewport height and
+  scroll value, so resizing the timeline panel is accounted for.
+- Keeps content-coordinate geometry consistent for the timeline canvas,
+  layer labels, edit gutter, and hit-testing.
+
+Root cause addressed
+The previous logic subtracted the top drop-workspace height from the natural
+Main coordinate while comparing it to a bottom edge in a different coordinate
+space. This caused the pin threshold to be offset and could create a visible
+separation between Main and adjacent overlay/audio rows. Main is now clamped
+using matching content coordinates for both viewport edges.
+
+Validation
+- Full test suite: 148 passed, 3 skipped.
+- Added regression tests for bottom pinning, top pinning, natural/centered flow,
+  and viewport resizing.

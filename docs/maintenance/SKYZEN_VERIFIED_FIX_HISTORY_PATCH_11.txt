@@ -1,0 +1,24 @@
+SKYZEN VERIFIED FIX HISTORY — PATCH 11
+======================================
+Baseline: Patch 10
+
+VERIFIED BY AUTOMATION
+----------------------
+1. Full automated test suite: 143 passed, 3 skipped.
+2. Existing keyframe normalization, interpolation, trim, split, and speed-curve math regressions continue to pass.
+3. Custom Bezier easing evaluates correctly at the segment midpoint.
+4. FFmpeg graph generation includes animated transform expressions for scale, rotation, opacity, and X/Y position.
+5. A real FFmpeg smoke render completed with animated scale, opacity, rotation, X/Y position, and color grading.
+6. Existing timeline toolbar builder is reused, preserving the prior undo/redo, crop, frame peek, split, delete, trim, and zoom controls.
+7. All changed Python files compile successfully.
+
+NOT VERIFIED IN THIS ENVIRONMENT
+--------------------------------
+- PySide6 is unavailable here, so widget layout and real mouse interactions could not be exercised in a live Windows GUI.
+- The user should test: toolbar buttons, embedded speed graph point dragging, constant-speed number entry, keyframe diamonds, the keyframe easing graph, and save/reopen/export.
+
+KNOWN LIMITATIONS
+-----------------
+- Speed-curve audio uses average speed rather than a fully variable pitch-preserving audio ramp.
+- Keyframes for crop, chroma-key, audio volume, and arbitrary effect parameters are not included.
+- Native C/C++ core work should follow profiling and stable GUI verification, not precede it.

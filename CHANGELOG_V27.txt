@@ -1,0 +1,34 @@
+Skyzen V27
+==========
+
+Fixed
+-----
+- Fixed the exact chroma-key crash from V26: similarity=0 produced an invalid
+  FFmpeg colorkey parameter. It is now clamped to the supported 0.00001..1 range.
+- Added safe fallback/clamping for malformed chroma similarity, blend and
+  foreground opacity values.
+- Bumped the preview cache profile so failed V26 chroma frames are not reused.
+
+Added
+-----
+- Preview Quality menu: Performance (default 640x360), Balanced (854x480), and
+  Clear (1280x720 from original source media).
+- Profile-specific preview cache IDs and proxy markers.
+- Profile-sized proxies and signature invalidation when the quality changes.
+- Functional crop controls for left, top, right and bottom; crop is applied to
+  both frame preview and composite/export rendering.
+- Regression tests for zero-tolerance chroma key, profile switching, safe crop
+  ranges and crop+key rendering in one FFmpeg graph.
+
+Preserved
+--------
+- Existing Skyzen UI structure and modular Python/PySide6 application.
+- Single-composite playback for synchronized multitrack video/audio.
+- Existing timeline operations and export workflow.
+- Low-end CPU-friendly default and optional GPU-independent workflow.
+
+Limitations
+-----------
+- This is not a wholesale port or pixel-identical implementation of OpenCut or
+  Concat. Advanced blend modes, speed/reverse, keyframes, masks, curves/HSL,
+  HDR and a GPU-native real-time compositor are not yet implemented.

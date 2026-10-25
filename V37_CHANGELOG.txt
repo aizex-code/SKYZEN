@@ -1,0 +1,6 @@
+Skyzen V37 — OpenCut Workflow Sync Fix
+
+- Fixed source-scroll normalization in timeline sidebar/gutter/track synchronization.
+- Verified test suite: 77 passed, 3 skipped.
+- Added docs/OPENCUT_WORKFLOW_INTEGRATION_V37.md documenting source references, Skyzen module responsibilities, and integration contracts.
+- No dependencies added. Existing PySide6 + FFmpeg architecture retained.

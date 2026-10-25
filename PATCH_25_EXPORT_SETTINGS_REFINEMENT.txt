@@ -1,0 +1,16 @@
+SKYZEN PATCH 25 — EXPORT SETTINGS REFINEMENT
+
+Changes in this patch:
+- Widened the export dialog and added consistent outer margins.
+- Kept the settings form and controls at bounded widths so they do not stretch across the dialog when it is resized.
+- Added FPS presets (project FPS, 24, 25, 30, 48, 50, 60) plus a Custom 1–60 FPS option.
+- Added encoding-speed choices: recommended balance, faster export, balanced, and higher quality.
+- Added a dedicated output-folder picker; export filename selection starts in that folder.
+- Added Save settings, persisting export profile, resolution, FPS choice, encoding speed, quality, thumbnail mode/path, project name, and output folder through QSettings.
+- Improved project-frame thumbnail behavior when the playhead is in a gap by choosing the nearest visible clip frame.
+- Preserved the single project root, main.py entry point, and existing timeline files.
+
+Validation:
+- Python compileall passed.
+- Automated test suite: 153 passed, 3 skipped.
+- Windows GUI export and thumbnail output still need a real local export run to verify against the user's FFmpeg installation and project media.

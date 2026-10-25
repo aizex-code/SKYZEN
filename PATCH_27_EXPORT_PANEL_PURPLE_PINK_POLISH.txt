@@ -1,0 +1,18 @@
+SKYZEN PATCH 27 — EXPORT PANEL VISUAL POLISH
+
+Changes
+- Refined the dedicated export-progress page with clearer spacing, margins, and output-path readability.
+- Replaced the former cyan highlight with Skyzen's violet-to-pink accent palette.
+- Added a native Qt animated gradient progress bar. Its fill percentage still follows FFmpeg's reported progress; the moving sheen is visual only.
+- Added clickable YouTube buttons with locally drawn play icons for https://www.youtube.com/@bronveil and https://www.youtube.com/@s7xian.
+- Kept all changes inside the existing app/export/export_dialog.py module; main.py and timeline code were not changed.
+- Added missing subprocess and tempfile imports used by the project-frame thumbnail preview path.
+
+Animation note
+Python Turtle was intentionally not used: Turtle opens a separate drawing window and is not appropriate for a progress indicator embedded in the editor. The progress animation is rendered in the existing Qt widget, stays in the export panel, and does not fake the export percentage.
+
+Validation
+- Python syntax compilation passed.
+- Export settings tests: 3 passed.
+- Full test suite: 153 passed, 3 skipped.
+- Qt runtime rendering could not be exercised in this environment because PySide6 is not installed here. Run the project with its requirements.txt on the target Windows system to verify the visual result.

@@ -1,0 +1,12 @@
+SKYZEN V38 — OpenCut row alignment
+
+Changes:
+- Centralized row geometry in app/timeline_panel/track_layout.py.
+- Sidebar row rendering and timeline hit-testing now use the same geometry model.
+- Clip cards are 44 px high inside 50 px lanes with 3 px top and bottom insets.
+- Playback, clip timing, compositing, and export logic were not intentionally changed.
+- Added regression tests for row-position parity and section-row offsets.
+
+Validation:
+- Python syntax compilation and targeted pure-Python layout tests should be run in the
+  same environment as Skyzen. PySide6 is required to launch the full editor.

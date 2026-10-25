@@ -1,0 +1,3 @@
+# Skyzen Python dependencies
+# FFmpeg and FFprobe are separate system tools; install them yourself.
+PySide6>=6.7,<7

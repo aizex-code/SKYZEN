@@ -1,0 +1,13 @@
+SKYZEN VERIFIED FIX HISTORY — PATCH 13
+
+Implemented in source
+- Embedded curve remains under the Speed controls in the right Inspector.
+- Speed axis is labelled from 5× down to 0.5×.
+- Starting-point speed label is drawn on the graph.
+- Curve changes recalculate duration and rebuild the timeline.
+- Speed bounds are aligned across Inspector, animation math, preview, snapshot and FFmpeg backend.
+
+Not yet verified on Windows GUI
+- Actual visual fit at all user-chosen panel widths.
+- Real-time playback continuity at extreme 0.5× and 5× ramps.
+- Export parity and audio timing.

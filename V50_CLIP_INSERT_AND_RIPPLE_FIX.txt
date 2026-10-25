@@ -1,0 +1,14 @@
+SKYZEN V50 — Deterministic Clip Insert & Ripple Placement
+
+Changes based on the V49 archive and the user's reported drag-placement issue:
+- Removed the obsolete left-edge-only insertion detector so there is one consistent drop-placement path.
+- A clip dropped over another clip now resolves to an exact boundary: left half inserts before, right half inserts after.
+- The same frame resolver is used by the live drag preview and the final drop commit.
+- Existing ripple insertion remains frame-domain based; clips at/after the insertion point move to make room for the incoming clip, with the immediate right clip attached at the exact frame boundary.
+- Replaced the bright cyan insertion preview with a subdued charcoal preview and low-contrast displacement shadows.
+- Kept the main-track anchor, playback, timeline scrolling, trim cursor, and modular structure unchanged.
+
+Validation:
+- Python compileall passed.
+- Test suite: 106 passed, 3 skipped.
+- GUI interaction still requires manual testing on Windows.

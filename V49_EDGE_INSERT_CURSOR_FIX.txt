@@ -1,0 +1,15 @@
+SKYZEN V49 — Edge Insert + Trim Cursor Cleanup
+
+Changes based on V48:
+- Removed the permanent left/right trim glyph badges painted over selected or hovered clips.
+- Kept trim affordances cursor-only: the custom </ and /> cursor appears on the clip edge; the body uses the normal hand cursor.
+- Changed the custom trim cursor from bright white to a dark charcoal tone.
+- Added a precise left-edge insert target: dropping a dragged clip in the leftmost 10% of another compatible clip now targets that clip's exact start frame.
+- The insert target is reflected in the live drag preview, and the existing frame-domain ripple insert pushes the destination clip/right-side sequence to make room based on the dragged clip's exact duration.
+- Preserved the pinned main-lane start behavior and existing scrolling/playback architecture.
+
+Validation:
+- Python compileall passed.
+- Full test suite: 103 passed, 3 skipped.
+
+Manual GUI verification is still recommended for drag feel/cursor appearance on Windows.

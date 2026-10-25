@@ -1,0 +1,29 @@
+Skyzen V36 — OpenCut-inspired timeline row model
+
+Built from the user's V34 archive, with the supplied OpenCut source inspected.
+
+Main changes:
+- Removed the separate sticky/pinned Main lane from the timeline content, layer labels, and edit gutter.
+- Main is now emitted by the same canonical timeline_ui_rows() loop as every other track.
+- One shared row-geometry function now includes all track rows; timeline clips, layer labels, edit buttons, and row hit-testing use the same natural y positions.
+- Timeline content height counts Main as an ordinary track instead of adding a separate sticky-main gap.
+- Scroll coordinator still synchronizes the timeline, labels, and edit gutter using equal logical vertical ranges.
+- Crop canvas now switches to a fit-to-panel crop-output preview when the pointer leaves the canvas, and returns to draggable crop handles when the pointer re-enters.
+- Right-edge trimming can extend back toward the full source media end after a prior trim.
+- Clip metadata now has a dark translucent backing; selected/hovered clips display visible left/right trim affordances.
+- Timeline toolbar glyphs use ] for trim-left, ]|[ for split, and [ for trim-right.
+
+OpenCut reference points inspected:
+- apps/web/src/timeline/hooks/use-scroll-sync.ts
+- apps/web/src/timeline/hooks/use-initial-scroll-bottom.ts
+- apps/web/src/timeline/components/layout.ts
+- apps/web/src/timeline/components/track-layout.ts
+- apps/web/src/timeline/controllers/resize-controller.ts
+
+Implementation note:
+OpenCut is React/TypeScript with its own timeline data model and browser scroll containers; Skyzen is PySide6. A literal source-to-source copy would not work. This patch ports the relevant layout and interaction behavior into Skyzen's architecture rather than copying unrelated OpenCut code.
+
+Validation:
+- Python syntax compilation passed.
+- Targeted tests: test_track_layout.py, test_video_engine.py, test_v25_playback_trim.py, test_audio_and_import_regressions.py — 34 passed, 3 skipped.
+- No full Windows GUI interaction test was run in this environment. Manual validation is still needed for scroll-wheel and scrollbar-drag alignment, crop preview transition, and trim extension in the live application.

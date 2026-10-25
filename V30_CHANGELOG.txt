@@ -1,0 +1,16 @@
+Skyzen V30 UI / Timeline Refinement
+==================================
+
+Changes:
+- Timeline crop toolbar action uses the requested [ ] symbol.
+- Left/right trim actions use </ and /> labels.
+- Clip-specific toolbar actions are disabled until a timeline clip is selected.
+- Timeline track row height reduced from 56px to 50px to increase usable workspace.
+- Existing project structure and FFmpeg engine were preserved.
+
+Important limitations:
+- This is a targeted UI refinement, not a full OpenCut engine port.
+- Crop currently focuses the existing crop controls; it does not yet implement OpenCut-equivalent draggable crop handles on the preview.
+- Clip speed/retiming requires engine-level support and is not claimed as implemented here.
+- UI behavior and selection detection must be validated on Windows with PySide6 installed.
+- GPU acceleration, adaptive proxy strategy, and playback architecture have not been changed in this build.

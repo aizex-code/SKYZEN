@@ -1,0 +1,30 @@
+SKYZEN PROJECT WORKSPACE INTEGRATION
+=====================================
+
+Startup
+-------
+Run `python main.py`. Skyzen opens the Project Library first.
+
+Project workflow
+----------------
+- Create New Project creates a project folder and opens it in the editor.
+- Open a project card (or its menu) to launch the editor for that project.
+- Closing the editor saves project_state.json and returns to the Project Library.
+- Rename and Trash operate on the project folder, including its saved state.
+- Trash restore/permanent delete remain available in the Trash Bin.
+
+Project storage
+---------------
+Each project lives under `project_manager/projects/<project name>/`.
+`project.json` stores project metadata.
+`project_state.json` stores the imported media paths and timeline track data.
+Media files are referenced by absolute path, not copied into the project folder.
+If a referenced source file is moved or deleted, it will be skipped when restoring
+the media bin; timeline clips may still appear but missing sources cannot render.
+
+Compatibility
+-------------
+The original editor modules and timeline implementation are retained. The project
+manager is an entry point around the existing editor, with state persistence added
+at the editor boundary. The project manager's Settings and Trash retention use
+`project_manager/settings.json`.

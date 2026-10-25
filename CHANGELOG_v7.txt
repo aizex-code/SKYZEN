@@ -1,0 +1,34 @@
+SKYZEN V7 — OVERLAY CRASH MITIGATION + MAIN-LANE LAYOUT
+=======================================================
+
+Changes
+-------
+1. Added app/media/thumbnail_service.py, a shared background FFmpeg thumbnail
+   service used by both the media bin and timeline. Thumbnail extraction no
+   longer runs on the UI thread during media-card or timeline-row construction.
+2. Paused video overlays no longer create QMediaPlayer instances. They use
+   cached timeline thumbnails while editing, reducing native decoder/resource
+   pressure during repeated Add Overlay operations.
+3. On Play, the preview promotes selected overlay placeholders to live decoders.
+   On Pause, overlay decoders are replaced with lightweight thumbnails and
+   released. The base/main video remains available for paused preview.
+4. Extracted preview-decoder limits and layer selection into
+   app/player_panel/preview_policy.py.
+5. Limited simultaneous live video decoders to three (base + up to two overlays)
+   and audio decoders to four. Additional clips remain editable on the timeline.
+6. Extracted the sticky main-lane placement policy into
+   app/timeline_panel/track_layout.py.
+7. Main Video is centered with no overlays, moves down one track-step with the
+   first overlay, moves another step with the second, and pins near the bottom
+   from the third overlay onward. The bottom breathing gap is larger; overlay
+   rows continue to scroll behind the pinned main lane. Timeline, sidebar, and
+   edit-gutter share the same placement function.
+8. Added small pure-Python regression tests for decoder selection and sticky
+   main-lane placement.
+
+Validation
+----------
+All Python files passed AST parsing and py_compile. Pure-Python policy tests
+run without PySide6. This environment does not have PySide6, so no live GUI,
+codec, or Windows native-multimedia test could be run. A native Qt crash can
+only be confirmed against the user's actual Windows runtime and media files.

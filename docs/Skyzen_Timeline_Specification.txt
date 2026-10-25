@@ -1,0 +1,747 @@
+SKYZEN TIMELINE — CAPCUT-STYLE PIXEL-PARITY IMPLEMENTATION SPECIFICATION
+==========================================================================
+
+PURPOSE
+-------
+Rebuild Skyzen's timeline panel to visually and behaviorally match the
+observed CapCut timeline layout shown in the supplied reference screenshots.
+
+IMPORTANT:
+- Do NOT rebuild Skyzen from zero.
+- Do NOT remove or break existing working editing functionality.
+- Do NOT create a static mockup.
+- The result must be a real, interactive timeline.
+- Preserve Skyzen's existing media, clip, playback, trim, split, drag/drop,
+  thumbnail, waveform, selection, undo/redo, snapping and 30-FPS timing logic
+  unless a change is explicitly required by this specification.
+- The timeline must use one shared timeline coordinate system for ruler,
+  clips, playhead and preview synchronization.
+- The goal is pixel-level visual parity with the reference behavior and layout,
+  not merely a similar-looking timeline.
+
+REFERENCE BEHAVIOR OBSERVED
+---------------------------
+The reference timeline consists of three major visual areas:
+
+1. TIMELINE TOOLBAR
+2. TIME RULER
+3. LAYER/TRACK WORKSPACE
+
+The old "Core / Timeline 3 / +" tab bar must NOT exist in the final Skyzen
+timeline. Remove that unnecessary vertical space while keeping the timeline
+tool toolbar directly below the editor.
+
+OVERALL STRUCTURE
+-----------------
+
+    +--------------------------------------------------------------+
+    | TIMELINE TOOLBAR                                             |
+    +----------------------+---------------------------------------+
+    |                      | TIME RULER                            |
+    | ADJUSTABLE LAYER     +---------------------------------------+
+    | CONTROL SIDEBAR      | SCROLLABLE OVERLAY / SECONDARY TRACKS|
+    |                      |                                       |
+    |                      |                                       |
+    |                      +---------------------------------------+
+    |                      | MAIN VIDEO TRACK                     |
+    |                      |                                       |
+    +----------------------+---------------------------------------+
+                           | small bottom gap / breathing room     |
+                           +---------------------------------------+
+
+The left layer-control area and timeline track rows are a synchronized
+two-column system. They are not two unrelated lists.
+
+1. ADJUSTABLE LEFT LAYER PANEL
+------------------------------
+
+The left layer panel is horizontally resizable.
+
+There must be a real adjustable divider/splitter between:
+
+    LEFT LAYER CONTROL PANEL | TIMELINE CONTENT
+
+Changing the width of the left panel must not break:
+- ruler coordinates
+- clip positions
+- playhead position
+- horizontal scrolling
+- zoom
+- track alignment
+- drag/drop
+- main-track alignment
+
+The layer panel contains one control row corresponding to every timeline row.
+
+Example:
+
+    Layer 1     [controls]
+    Layer 2     [controls]
+    Layer 3     [controls]
+    Layer 4     [controls]
+    Main Video  [controls]
+
+The control rows must remain vertically aligned exactly with their
+corresponding track rows.
+
+2. SHARED VERTICAL SCROLL
+-------------------------
+
+The left layer panel and the scrollable overlay-track area must share exactly
+the same vertical scroll position.
+
+If overlay Layer 3 moves upward by 40 px in the track area, Layer 3's controls
+must move upward by exactly 40 px in the left panel.
+
+DO NOT implement two independent vertical scroll positions.
+
+Conceptually:
+
+    SharedVerticalScroll
+          |
+          +---- Layer Control Rows
+          |
+          +---- Overlay Track Rows
+
+The scrollbar/scroll state must therefore control both columns together.
+
+3. MAIN VIDEO TRACK IS SPECIAL
+------------------------------
+
+The main video track is NOT an ordinary overlay track.
+
+It must remain pinned at the bottom of the usable timeline workspace.
+
+Overlay/secondary tracks scroll above it.
+
+Conceptually:
+
+    OVERLAY TRACK 1
+    OVERLAY TRACK 2
+    OVERLAY TRACK 3
+    OVERLAY TRACK 4
+    OVERLAY TRACK 5
+    --------------------------  main-track boundary
+    MAIN VIDEO TRACK
+    --------------------------
+    small bottom gap
+
+When there are many overlays, scrolling them upward must allow them to move
+behind/under the main-track boundary and disappear through clipping.
+
+The main video track itself must not scroll away with the overlays.
+
+The main track must remain visible at the bottom while overlay content scrolls
+behind it.
+
+4. OVERLAY VIEWPORT / CLIPPING
+------------------------------
+
+The overlay area must be a clipped viewport.
+
+Overlay tracks are allowed to move vertically inside this viewport.
+
+The main-track container sits above/over the bottom edge of that scrollable
+overlay region.
+
+When overlay content scrolls toward the main-track boundary:
+
+    overlay
+    overlay
+    overlay
+       |
+       | scrolls upward
+       v
+    [CLIPPED AT MAIN TRACK BOUNDARY]
+    ==============================
+    MAIN VIDEO TRACK
+    ==============================
+
+Do not fake this by deleting or repositioning clips.
+
+Use actual viewport clipping/layering.
+
+5. MAIN TRACK BOTTOM GAP
+------------------------
+
+The main video track must not touch the bottom edge of the timeline.
+
+Leave a small clean bottom breathing gap below the main track.
+
+The gap should remain consistent when the overlay list is scrolled.
+
+6. TRACK HEIGHTS
+----------------
+
+Track heights are content/type dependent.
+
+Do NOT force every timeline row to have the same height.
+
+Large media/video tracks should have enough vertical height to display:
+- thumbnail strip
+- clip name
+- duration
+- waveform/audio visualization where available
+
+Video overlays should also have substantial media height.
+
+Text, adjustment and other non-media layers may be shorter, but must still
+remain comfortably usable and visually consistent.
+
+The main video track is one of the larger track types.
+
+Track height must be part of the track model/layout, e.g.:
+
+    track.height
+
+rather than one global fixed height for every object.
+
+7. MAIN VIDEO MEDIA DISPLAY
+---------------------------
+
+The main video clip should visibly behave as a real media clip.
+
+It should support:
+- actual thumbnails
+- filename/title
+- duration
+- waveform/audio visualization where applicable
+- selection
+- movement/trim behavior already supported by Skyzen
+- accurate time positioning
+
+Do not replace this with a decorative rectangle.
+
+8. OVERLAY MEDIA DISPLAY
+------------------------
+
+Video/image overlays should show media information appropriate to their size.
+
+Video overlays should visibly contain thumbnail imagery when possible.
+
+Different object types can use different visual heights.
+
+All clips must remain real editable timeline objects.
+
+9. SYNCHRONIZED PLAYBACK / COMPOSITING
+--------------------------------------
+
+All timeline layers use ONE shared project clock.
+
+If several clips overlap in time, they must all be active at the same project
+time.
+
+Example:
+
+    Project time = 10.000 s
+
+    Main clip    -> frame at 10.000 s
+    Overlay A    -> frame at 10.000 s
+    Overlay B    -> frame at 10.000 s
+    Overlay C    -> frame at 10.000 s
+
+These clips must be synchronized and composited together.
+
+Overlapping overlays must NOT replace each other simply because they occupy
+different tracks.
+
+The conceptual pipeline is:
+
+    PROJECT CLOCK
+          |
+          +---- Main clip
+          +---- Overlay A
+          +---- Overlay B
+          +---- Overlay C
+          |
+          v
+      COMPOSITOR
+          |
+          v
+        PLAYER
+
+This is essential for correct "chorus"/simultaneous-layer behavior.
+
+10. RULER
+---------
+
+The time ruler remains vertically fixed while tracks scroll vertically.
+
+Vertical scrolling changes:
+- layer rows
+- overlay rows
+
+Vertical scrolling must NOT move the ruler.
+
+Horizontal scrolling and zoom affect:
+- ruler
+- clips
+- playhead
+- timeline coordinate system
+
+All of them must share one horizontal coordinate system.
+
+11. SINGLE TIMELINE COORDINATE SYSTEM
+-------------------------------------
+
+There must be one authoritative conversion:
+
+    time <-> x position
+
+Use the same coordinate conversion for:
+- ruler ticks
+- clip start
+- clip end
+- trim handles
+- playhead
+- preview marker
+- selection
+- drag/drop placement
+- horizontal scrolling
+- zoom
+
+Do NOT independently calculate clip/ruler/playhead coordinates in separate
+widgets.
+
+The relationship should conceptually be:
+
+    x = timeline_origin + (time - view_start) * pixels_per_second
+
+and the inverse must use the exact same coordinate system.
+
+12. PLAYHEAD
+-----------
+
+The primary playhead is the authoritative project-time marker.
+
+It must:
+- align with the ruler
+- align with clips
+- update preview
+- support frame-accurate movement
+- remain synchronized with the project clock
+
+At 30 FPS:
+
+    frame_duration = 1 / 30 second
+
+Frame-accurate positioning must be preserved.
+
+13. PREVIEW / SCRUB MARKER
+--------------------------
+
+Skyzen should support a separate preview/scrub marker in the timeline if the
+existing design contains the secondary preview-axis behavior.
+
+The preview marker:
+- moves frame-by-frame
+- previews/seeks the corresponding frame
+- does NOT start playback
+- does NOT change the playback state
+- remains separate from the actual playhead when used as a preview cursor
+
+The actual project playhead remains authoritative for playback.
+
+14. HORIZONTAL ZOOM
+-------------------
+
+Timeline zoom must affect the ruler, clips, playhead and markers together.
+
+Zoom should remain smooth and preserve the appropriate timeline position,
+preferably centered/anchored around the playhead or current cursor according
+to the existing Skyzen zoom implementation.
+
+Mouse-wheel zoom behavior may be accelerated slightly for usability.
+
+Do not break existing zoom controls.
+
+15. VERTICAL SCROLL SPEED
+-------------------------
+
+Timeline vertical scrolling should feel responsive.
+
+Mouse-wheel scrolling over the overlay/layer workspace should move the
+timeline content at a slightly faster but controlled speed than the current
+implementation.
+
+Do not make scrolling excessively fast.
+
+16. EMPTY TIMELINE STATE
+------------------------
+
+When there are no layers/media, do NOT show a huge empty black-looking
+timeline with no guidance.
+
+Show a clean contextual empty-state message:
+
+    Drop media to start editing
+
+The message should be centered within the usable timeline/drop area.
+
+The empty region itself must be a real drag-and-drop target.
+
+When media is dropped:
+- remove/hide the empty-state message
+- create the appropriate main/compatible track
+- insert the media
+- update the timeline duration
+- update the ruler
+- update the player/preview
+
+17. DRAG AND DROP
+-----------------
+
+The entire appropriate empty timeline area must accept media drag/drop.
+
+Dropping media onto:
+- an existing compatible overlay track -> place it on that track
+- an existing track according to Skyzen's existing placement rules -> preserve
+  those rules
+- the empty timeline/drop area -> create the required compatible track
+- the appropriate main-track region -> place on main track according to the
+  project rules
+
+Do not create dead black areas that reject drag/drop.
+
+18. LAYER CONTROL ROWS
+----------------------
+
+Each layer has its own synchronized control row.
+
+Controls may include, depending on track type:
+- visibility/eye
+- lock
+- mute/audio
+- additional layer actions
+
+The controls must scroll vertically exactly with their corresponding rows.
+
+The main video control row must remain aligned with the pinned main track.
+
+19. SCROLLING MODEL
+------------------
+
+Use two independent axes:
+
+VERTICAL:
+    overlay/layer scrolling
+
+HORIZONTAL:
+    timeline time navigation / zoomed timeline navigation
+
+Vertical scrolling must not alter time.
+
+Horizontal scrolling must not alter layer ordering.
+
+The main video remains vertically pinned.
+
+20. RESPONSIVE RESIZING
+-----------------------
+
+When the timeline panel height changes:
+- overlay viewport expands/contracts
+- main track remains bottom anchored
+- bottom gap remains
+- ruler stays aligned
+- left panel stays synchronized
+- no controls overlap
+- clips remain correctly positioned
+
+When the left layer panel width changes:
+- timeline content gets the remaining width
+- time coordinate mapping remains correct
+- ruler and clips remain aligned
+
+21. VISUAL STYLE
+----------------
+
+Match the reference CapCut-like visual language as closely as possible:
+
+- clean dark professional editor
+- restrained borders
+- dark gray timeline background
+- subtle row separation
+- compact controls
+- clear media thumbnails
+- small readable labels
+- minimal visual clutter
+- consistent spacing
+- no unnecessary tab/header bar above the toolbar
+- no bright unwanted full-width yellow border
+- main track visually separated from overlays
+- clean bottom breathing room
+
+Do not add decorative UI that is not present in the reference.
+
+22. REMOVE UNNECESSARY UI
+-------------------------
+
+Remove:
+- "Core" tab
+- "Timeline 3" tab
+- "+" timeline-tab control
+- their entire unnecessary horizontal bar
+
+Keep:
+- timeline editing toolbar
+- ruler
+- layers
+- clips
+- main video
+- scrolling
+- drag/drop
+- existing editing tools
+
+23. EXISTING SKYZEN FUNCTIONALITY MUST SURVIVE
+----------------------------------------------
+
+Do NOT break or regress:
+- media import
+- clip creation
+- real media duration detection
+- thumbnails
+- waveform generation
+- clip selection
+- clip movement
+- trim handles
+- frame-accurate trim
+- split
+- delete
+- duplicate/copy/paste where already implemented
+- undo/redo
+- snapping
+- magnetic behavior where already implemented
+- layer creation
+- layer ordering
+- drag/drop
+- player synchronization
+- project duration calculation
+- 30 FPS timeline
+- context menus
+- existing Skyzen signals/API expected by main_window/player_panel
+
+If architectural refactoring is necessary, preserve the existing public API
+or provide compatibility methods/signals rather than breaking main_window.py.
+
+24. IMPORTANT IMPLEMENTATION PRINCIPLE
+---------------------------------------
+
+Do not solve the visual problem by painting fake rows.
+
+Tracks must remain real interactive objects.
+
+The final timeline should have a clear separation between:
+
+    MODEL
+      |
+      +-- tracks
+      +-- clips
+      +-- project time
+      +-- playhead
+      +-- selection
+      +-- scroll state
+      +-- zoom
+
+    VIEW
+      |
+      +-- ruler
+      +-- layer sidebar
+      +-- overlay viewport
+      +-- pinned main track
+      +-- bottom gap
+      +-- empty-state
+      +-- toolbar
+
+    INTERACTION
+      |
+      +-- drag/drop
+      +-- selection
+      +-- move
+      +-- trim
+      +-- split
+      +-- scrolling
+      +-- zoom
+      +-- scrubbing
+
+25. RECOMMENDED INTERNAL LAYOUT MODEL
+-------------------------------------
+
+Conceptually implement:
+
+    TimelinePanel
+    |
+    +-- Toolbar
+    |
+    +-- RulerRow
+    |
+    +-- TimelineWorkspace
+        |
+        +-- SharedVerticalScrollState
+        |
+        +-- LayerSidebarViewport
+        |     |
+        |     +-- OverlayLayerRows
+        |     +-- MainLayerRow
+        |
+        +-- TimelineTrackViewport
+              |
+              +-- OverlayTrackViewport
+              |     |
+              |     +-- OverlayTracks
+              |
+              +-- PinnedMainTrack
+              |
+              +-- BottomGap
+
+The left sidebar overlay rows and timeline overlay rows must consume the same
+track layout metrics and the same vertical scroll offset.
+
+26. MAIN TRACK PINNING MODEL
+----------------------------
+
+Do NOT put the main track inside the same vertically scrolling overlay
+content.
+
+Instead:
+
+    scrollable_overlay_content
+    --------------------------
+    pinned_main_track
+    bottom_gap
+
+The main track is anchored to the bottom of the timeline workspace.
+
+When overlay content becomes taller than its viewport, it scrolls.
+
+When overlay content is shorter than the viewport, it remains naturally above
+the main track without unnecessary stretching.
+
+27. LAYER ORDER
+---------------
+
+The visual ordering should match the reference:
+
+    topmost overlay
+       |
+    overlay
+       |
+    overlay
+       |
+    lower overlay
+       |
+    MAIN VIDEO
+       |
+    bottom gap
+
+Layer ordering and playback compositing must remain logically consistent.
+
+28. PIXEL-PARITY REQUIREMENT
+----------------------------
+
+Treat the supplied CapCut screenshots as the visual reference.
+
+Do not settle for "similar".
+
+Pay attention to:
+- exact relative heights
+- spacing
+- panel proportions
+- ruler placement
+- toolbar height
+- layer row alignment
+- main-track height
+- bottom gap
+- clipping boundary
+- left/right divider
+- scroll behavior
+- clip placement
+- thumbnail proportions
+- text placement
+- control-row alignment
+- empty-state position
+
+Where exact numerical pixel values cannot be determined from the screenshots,
+use measured proportions and keep the values centralized as constants so they
+can be tuned without rewriting the architecture.
+
+29. TESTING REQUIREMENTS
+------------------------
+
+Before considering the implementation complete, test at minimum:
+
+A. Empty timeline
+    - empty message visible
+    - drag/drop works
+
+B. One main video
+    - main track at bottom
+    - bottom gap visible
+    - thumbnails/waveform correct
+
+C. Multiple overlays
+    - left controls align exactly
+    - vertical scrolling moves both columns together
+    - main track stays pinned
+
+D. Many overlays
+    - overlay content clips behind main-track boundary
+    - no overlay draws over the main track
+    - no black dead area blocks dropping
+
+E. Multiple simultaneous overlays
+    - all play at the same project time
+    - compositing works
+
+F. Horizontal zoom
+    - ruler/clips/playhead stay aligned
+
+G. Horizontal scroll
+    - ruler/clips/playhead remain synchronized
+
+H. Resizing
+    - timeline height changes correctly
+    - left panel width changes correctly
+
+I. Editing
+    - move
+    - trim
+    - split
+    - delete
+    - undo/redo
+    - selection
+    - context menu
+
+J. Playback
+    - frame-accurate playhead
+    - preview synchronized
+    - overlays synchronized with main media
+
+30. FINAL GOAL
+--------------
+
+The final Skyzen timeline should feel like a professional CapCut-style
+timeline while remaining Skyzen's own implementation.
+
+The most important visual/behavioral characteristics are:
+
+    1. Adjustable left layer panel
+    2. Left panel and tracks scroll together
+    3. Overlay tracks scroll vertically
+    4. Main video track stays pinned at the bottom
+    5. Overlay content clips behind the main track
+    6. Small clean gap below the main track
+    7. Different track heights for different object types
+    8. Real thumbnails/waveforms
+    9. Empty-state "Drop media to start editing"
+   10. Full timeline area is a real drop target
+   11. One shared time coordinate system
+   12. Frame-accurate playhead
+   13. Synchronized simultaneous-layer playback/compositing
+   14. Clean dark professional visual design
+   15. No unnecessary Core/Timeline 3/+ tab bar
+   16. No unwanted yellow border
+   17. Existing Skyzen editing functionality remains intact
+
+DO NOT IMPLEMENT YET IF ADDITIONAL REFERENCE SCREENSHOTS ARE STILL AVAILABLE.
+If more reference screenshots are provided, inspect them first and refine this
+specification before making code changes.

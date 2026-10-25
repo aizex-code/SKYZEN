@@ -1,0 +1,26 @@
+SKYZEN V43 — PATCH 11 CHANGELOG
+===============================
+
+FIXES
+-----
+- Restored the complete existing timeline toolbar. Undo/redo, crop, frame peek, split, delete, left/right trim, and zoom controls are no longer replaced by an animation-only strip.
+- Added a compact Keyframe Curve action beside the timeline edit controls.
+- Keyframe Curve now edits easing between two keyframes. It no longer moves keyframe times and values while trying to change easing.
+- Added Custom Bezier easing with persistent serialized control values and matching Python/FFmpeg interpolation.
+- Enabled keyframes for scale, position X/Y/Z, rotation, opacity, and supported color-grading properties.
+- Added FFmpeg frame-evaluated expressions for transform animation; animated opacity uses an alpha expression in the export graph.
+- Kept a speed graph visible below Playback Rate in the Inspector. Dragging the graph updates the clip speed curve and timeline duration; the numeric field still controls constant speed.
+- Improved the layer visibility icon and adjusted the left tool strip / thumbnail preview card sizing.
+
+VALIDATION
+----------
+- Full Python compilation passed.
+- pytest: 143 passed, 3 skipped.
+- FFmpeg render smoke test passed with animated scale, opacity, rotation, X/Y position, and color grading.
+- PySide6 is unavailable in the patching environment, so the actual Windows GUI has not been launched here.
+
+NOTES
+-----
+- The project is based on Patch 10; existing media/audio/timeline modules were preserved.
+- Variable speed audio still follows average speed.
+- Crop, chroma-key, volume, and arbitrary effect keyframes remain future work.

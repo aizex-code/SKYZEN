@@ -1,0 +1,30 @@
+SKYZEN V6 — OVERLAY STABILITY + MEDIA BROWSER
+=============================================
+
+Changes in this archive
+-----------------------
+1. Protect the preview engine against native decoder exhaustion on low-memory
+   Windows PCs: maximum four simultaneous live video decoders and four audio
+   decoders. The timeline can still contain more clips; the preview displays the
+   base video and highest-priority overlays within the live preview budget.
+2. Overlay video players no longer allocate unused audio outputs.
+3. Release media sources before disposing of player objects and rely on Qt
+   parent ownership for player-owned audio outputs instead of scheduling a
+   second deletion.
+4. Guard media/player creation and per-layer sync errors so a bad file does not
+   propagate a Python exception through the timeline event handler.
+5. Bound image-overlay preview pixmaps to 1920x1080; original files are unchanged.
+6. Left panel has Folder… and Refresh controls. Browse a folder and view its
+   supported media in a thumbnail grid; import individual files as before.
+7. Video thumbnails now search PATH for FFmpeg as well as the app's bundled
+   locations. Images use scaled previews, audio uses a waveform-style preview,
+   and missing previews fall back to the Windows file icon.
+8. Media cards are taller, show the file-type icon beside the name, and provide
+   more room for the thumbnail and Add button.
+
+Validation
+----------
+24 Python files passed AST parsing and py_compile. ZIP integrity is checked.
+PySide6 is not installed in the build environment, so no live GUI or Windows
+multimedia runtime test could be performed. If the app still exits unexpectedly,
+send skyzen-crash.log from this project folder; main.py enables faulthandler.

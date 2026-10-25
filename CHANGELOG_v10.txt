@@ -1,0 +1,30 @@
+SKYZEN V10 — FAST PREVIEW PROFILE + COMPACT UI
+==============================================
+
+Preview performance
+-------------------
+- Preview composite resolution reduced from 1280x720 to 640x360.
+- Preview H.264 encoding uses ultrafast, CRF 32, zerolatency, two threads,
+  no B-frames, and a short GOP. Preview audio bitrate is 96 kb/s.
+- Temporary preview MP4 skips faststart relocation; it is a local cache, not
+  a downloadable file.
+- Scrub-frame renders use the same 640x360 dimensions.
+- Preview cache keys include a profile version, so old 720p cached composites
+  are not reused as if they matched the new profile.
+- Export settings remain separate; explicit export dimensions and codec profiles
+  are not changed by this preview profile.
+
+UI
+--
+- Media cards normalized from 132x140 to 128x126; thumbnails remain large enough
+  to identify content while fitting more items in the media bin.
+- Timeline toolbar height reduced from 36 to 30 pixels and button/zoom spacing
+  tightened to match the compact CapCut-inspired reference.
+
+Important limitation
+--------------------
+The preview still renders the whole project composite after edits. The new
+profile reduces pixel-processing and encoding cost substantially, but render
+time still depends on project duration, source codecs, number of clips, and
+overlap complexity. This version does not yet implement background per-clip
+proxies or segment-by-segment playback.

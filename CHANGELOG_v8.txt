@@ -1,0 +1,43 @@
+SKYZEN V8 — DECODER-FREE PAUSED EDITING
+=======================================
+
+Root cause addressed
+--------------------
+The previous engine used a native QMediaPlayer for the main clip even while
+paused. When editing the active stack, that left a native decoder alive while
+overlay placeholders were being added and removed. The source-preview player
+could also retain its own media source while the project compositor started.
+
+Changes
+-------
+1. Every video clip (main and overlays) now uses a cached thumbnail placeholder
+   while paused. No video decoder is created just because a clip is added,
+   selected, moved, trimmed, split, or deleted.
+2. Native video decoders are created only on explicit Play and released when
+   paused. Images continue to use pixmap items and need no decoder.
+3. If the active stack changes while playing, playback pauses before any new
+   decoder is created. This avoids hot-adding native media players during edits.
+4. The source-preview QMediaPlayer source is stopped and cleared when entering
+   timeline mode, preventing the source preview and project compositor from
+   holding media at the same time. Selecting a source asset re-enables it.
+5. Preview warnings and layer-stack changes append to skyzen-crash.log.
+6. Added a pure-Python policy test proving main and overlay videos both use
+   placeholders while paused and switch to decoder mode only during playback.
+7. Fixed run.bat: the previous file contained literal \n characters instead of
+   actual line breaks, so it could fail to launch correctly.
+8. Added a developer architecture guide and preserved the supplied timeline
+   specification in docs/.
+
+Validation
+----------
+30 Python files passed AST parsing and py_compile. Seven pure-Python tests pass.
+The build environment does not have PySide6, so a live Windows GUI/native
+multimedia test was not possible. Native crash stability must be verified on
+the target PC.
+
+
+Patch 19 — Main track pinning in both directions
+- Main (V1) now uses explicit viewport-boundary logic: bottom-pinned while navigating overlays, top-pinned after scrolling into the audio section.
+- Decorative top workspace is excluded from the stack-height decision to avoid false pinning and large blank gaps.
+- Shared row geometry remains the single source of truth for timeline, labels, and edit gutter.
+- Validation: 146 tests passed, 3 skipped (PySide6-dependent GUI tests).

@@ -1,0 +1,25 @@
+SKYZEN V11 — PREVIEW FIX + OPTIONAL SOURCE PROXIES
+===================================================
+
+- Fixed a missing `subprocess` import in the FFmpeg worker. This was capable of
+  preventing both paused frames and project previews from ever appearing.
+- Unexpected worker exceptions now emit a diagnostic instead of silently
+  leaving the player black.
+- The player displays a visible “Preparing preview frame…” status while a
+  still frame is being rendered.
+- Added an optional “Create fast proxies on import” menu setting, disabled by
+  default, and a command to build proxies for the current media bin.
+- Proxy conversion runs in one background worker at a time and produces one
+  reusable proxy per imported source, never one per timeline layer.
+- Preview snapshots use completed proxies when available; export snapshots
+  continue to use the original media.
+- Corrected scroll range calculations and the main-lane gap lookup used by
+  shared timeline/side-column row geometry.
+- Added a regression test for the RenderWorker subprocess import.
+
+Validation:
+- 45 Python files pass AST parsing and py_compile.
+- 13 unit tests pass.
+- Synthetic FFmpeg tests pass for overlay frame rendering, full composite
+  preview rendering, and the optional proxy encoding command.
+- Native PySide6 GUI testing remains unavailable in this environment.

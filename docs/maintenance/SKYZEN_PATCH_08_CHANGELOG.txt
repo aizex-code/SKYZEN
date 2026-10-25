@@ -1,0 +1,42 @@
+SKYZEN V43 — PATCH 08 CHANGELOG
+Title: CapCut-Style Tool Library Layout + Overlay Drop Safety
+
+BASELINE
+- Built on the user's supplied Skyzen V43 Patch 07 Tool Layers ZIP.
+- Existing media/audio workflows, timeline data model, player, trimming and rendering code were not intentionally rewritten.
+
+CHANGES
+1. Compact preset cards
+   - Reduced card minimum size and preview height.
+   - Reduced card padding and title/subtitle sizing.
+   - Enabled preview scaling so source preview pixmaps do not force the card wider than its grid cell.
+   - Responsive grid now uses 2 columns at typical narrow-panel widths and 3 columns when the library is wide enough.
+   - Kept the thumbnail + button and the card drag payload.
+
+2. Typed tool drop safety
+   - Text, Effects and Adjustments can be dropped onto any video lane, including the Main lane as a placement target.
+   - The insertion routine creates/uses a typed overlay track; it does not attach typed clips to the Main track itself.
+   - Dropping on Main uses the drop time and Main's stack position as a reference for a new overlay lane.
+
+3. Dark timeline insertion gaps
+   - Changed the gap background to match the dark timeline workspace.
+   - Hover feedback is a subtle dark lift with muted borders rather than a bright cyan outline, reducing distraction while editing.
+
+4. Preserved existing compact typed-layer height policy
+   - Text, Effects and Adjustments continue to use approximately half the normal overlay row height via the shared track_layout.py policy.
+   - No duplicate row-height calculation was introduced.
+
+VALIDATION
+- Python compileall: passed for app/.
+- ZIP integrity: checked when packaging.
+- PySide6 is unavailable in the patching environment; GUI interactions and Windows runtime were not executed here.
+- Full pytest/unittest suite was not claimed as run in this patch.
+
+MANUAL WINDOWS CHECKLIST
+1. Open Text, Effects and Adjustments; confirm cards fit 2 columns in the normal left panel without horizontal overflow.
+2. Resize the left panel wider and confirm the grid can show 3 columns when there is enough width.
+3. Drag each preset onto an overlay lane and onto Main; confirm a typed overlay is created and Main remains a normal media-only track.
+4. Press + on a preset and confirm it adds at the playhead.
+5. Check typed lane heights remain compact and colors remain distinct.
+6. Hover the small gaps between timeline rows; confirm they remain dark with subtle feedback.
+7. Re-test ordinary video import/drop, music placement below Main, trim both edges, playback, undo/redo and export.

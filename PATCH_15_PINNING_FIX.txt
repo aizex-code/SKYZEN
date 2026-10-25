@@ -1,0 +1,14 @@
+SKYZEN PATCH 15 — TIMELINE PINNING FIX
+
+Scope
+- Corrected the first audio lane positioning when the Main video lane is clamped by sticky overlay scrolling.
+- Main remains at the bottom of the overlay section; the first audio lane follows directly beneath Main at the top of the audio section.
+- Preserved the existing natural row flow until Main actually reaches its sticky boundary.
+- Added a regression test covering a tall overlay stack with audio present.
+
+Intentionally unchanged
+- Trimming, playback, speed curve, keyframes, effects, filters, adjustments, drag/drop, and project data behavior.
+
+Validation
+- Run: python -m unittest discover -s tests -v
+- This patch is limited to timeline row geometry and its regression test.

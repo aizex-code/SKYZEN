@@ -1,0 +1,41 @@
+SKYZEN — PATCH CHANGELOG
+
+PATCH 04 — FRAME-STABLE TRIMMING AND PREVIEW REFRESH
+Baseline: user-supplied Skyzen_V43_Stability_Patch_03.zip
+
+USER-REPORTED ISSUES
+1. Trimming still glitched during a continuous drag and while restoring trimmed footage.
+2. The trimmed clip did not reliably update/play in the player preview.
+3. The requested behavior is frame-by-frame trimming from both edges, restoring only the hidden source range, and never exceeding the actual source length.
+
+ROOT CAUSES ADDRESSED
+1. _trim_drag read source_in from the mutable clip on every mouseMove. Because each mouseMove had already written a new source_in, a left trim could repeatedly add the absolute pointer delta, causing drift/accumulation.
+2. The MAIN clip trim path forced new_start back to frame zero after trim math, without recalculating duration or source_in. That broke the source-to-project mapping for left trims on the main track. The main TRACK remains in its lane; the clip itself must still trim normally.
+3. Trim release rebuilt the timeline and emitted time_changed, but did not explicitly publish the edited active stack to the preview controller. The old rendered composite/still could remain visible.
+4. A zoom/layout update during a drag could change the pixels-per-frame conversion mid-gesture.
+
+CODE CHANGES
+1. app/timeline_panel/core.py
+   - Capture the source-in frame and pixels-per-frame scale at mouse-down.
+   - Derive every mouseMove result from the immutable mouse-down state and absolute pointer delta.
+   - Remove the MAIN-clip start override that corrupted the left-trim range. Track placement remains unchanged.
+   - On trim release, rebuild the timeline and explicitly call _emit_active_clips(..., push_to_player=True), causing the project preview controller to fingerprint the edited timeline and refresh the frame/composite.
+   - Reset gesture-specific trim state at release.
+2. tests/test_trim_preview_sync.py
+   - Added tests for absolute frame deltas during a drag, restoring the left/right edges, source-end bounds, publishing active clips on release, source-in/duration use by preview inputs, and preview-signature changes after edits.
+3. docs/maintenance/
+   - Updated the master plan, changelog, and cumulative history.
+
+VERIFICATION
+- Full available pytest suite: 119 passed, 3 skipped.
+- Python compileall: passed.
+- Live Windows/PySide6 GUI test: not performed in this environment.
+- User confirmation: pending for Patch 04. Automated tests do not prove GUI behavior.
+
+NOT CHANGED
+- Timeline layout/gaps/ghost preview, media panel, inspector, color grading, export architecture, proxy settings, and app module locations.
+- No Text, Effects, or Adjustment panels added in this patch.
+
+RELEASE CLEANUP
+- Exclude generated __pycache__, .pyc, and .pytest_cache files.
+- Preserve existing application files and historical notes.

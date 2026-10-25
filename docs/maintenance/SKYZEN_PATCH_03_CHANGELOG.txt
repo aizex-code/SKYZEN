@@ -1,0 +1,41 @@
+SKYZEN — PATCH CHANGELOG
+
+PATCH 03 — SEQUENTIAL LEFT/RIGHT TRIM SOURCE-RANGE FIX
+Baseline: user-supplied Skyzen_V43_Stability_Patch_02.zip
+
+USER-REPORTED REPRODUCTION
+1. Trim a clip from its left edge.
+2. Release the mouse.
+3. Trim the same clip from its right edge.
+4. The clip unexpectedly collapses to a very thin, approximately one-frame segment.
+
+ROOT CAUSE ADDRESSED
+The trim path could fall back to the current timeline duration when source_duration metadata was missing or invalid. After a left trim, source_in increases and the visible duration decreases. Treating only that decreased duration as the entire source length can make the right-edge upper bound smaller than the currently visible source range.
+
+CODE CHANGES
+1. app/timeline_trim_math.py
+   - Added resolve_source_length_frames(). It ensures the effective source bound is at least source_in + visible_duration, while retaining a longer valid source duration.
+   - This avoids collapsing an already-visible source range when metadata is absent or stale.
+2. app/timeline_panel/core.py
+   - Resolve and cache the trim source-length bound when a trim drag begins.
+   - If source_duration is absent/invalid, attempt to probe the media duration and persist it when successful.
+   - If probing fails, use the currently visible source range as a safe bound. This preserves trimming but cannot safely allow extension beyond the known visible range until source duration is available.
+   - Clear the per-drag source-length cache at drag release.
+3. tests/test_drag_trim.py
+   - Added regression tests for sequential left-then-right trimming with missing or stale source-duration metadata.
+4. docs/maintenance/
+   - Updated the master fix plan, Patch 03 changelog, and cumulative verified-fix history.
+
+VERIFICATION
+- Full available pytest suite: 112 passed, 3 skipped.
+- Python compilation for app and tests: passed.
+- Live PySide6 GUI test: not performed in this environment; PySide6 is unavailable here.
+- User confirmation: pending. Do not mark trim as GUI-verified until the user tests the release.
+
+NOT CHANGED
+- Track layout, insertion gaps, ghost-layer preview, main-track scrolling, playback/compositor, proxy encoding, rendering cache, keyframes, export, inspector, and left-side tool panels.
+- Application source-module paths were not moved or renamed.
+
+RELEASE CLEANUP
+- Remove generated __pycache__, .pyc, and .pytest_cache artifacts.
+- Preserve application source, tests, project assets, and historical notes.

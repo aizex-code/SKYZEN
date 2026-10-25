@@ -1,0 +1,44 @@
+SKYZEN PATCH 17 — AUDIO SCROLL / MAIN PINNING
+============================================
+
+Scope
+-----
+Fix only the interaction between Main video pinning and audio-lane scrolling.
+The working overlay pinning behavior is preserved.
+
+Expected behavior
+-----------------
+1. While scrolling through the overlay/video section, Main keeps the existing
+   bottom-sticky behavior and overlays scroll behind it.
+2. Once Main's natural row has scrolled past the top boundary into the audio
+   section, Main pins at the top boundary.
+3. Audio rows then remain in natural scroll coordinates and pass behind Main;
+   the first audio row is no longer independently raised above Main.
+4. The same shared geometry remains responsible for timeline canvas, labels,
+   and edit controls so their rows stay aligned.
+5. No changes were made to trimming, playback, speed curves, keyframes, export,
+   or media import logic.
+
+Implementation
+--------------
+- app/timeline_panel/track_layout.py
+  * Main switches from bottom pinning to top pinning after its natural row has
+    scrolled above the viewport's top boundary.
+  * First audio row stops top-pinning once Main owns the top boundary.
+- app/timeline_panel/left_layers_panel/layers.py
+  * Audio widget is not raised over Main while Main is top-pinned, allowing
+    audio rows to visually scroll behind the pinned Main row.
+- tests/test_audio_layer_layout.py
+  * Added/updated regression expectations for Main top-pinning and audio rows
+    continuing in natural scroll coordinates behind it.
+
+Verification
+------------
+Command: python -m pytest -q
+Result: 144 passed, 3 skipped.
+
+GUI note
+--------
+Automated tests validate the shared row geometry and regression behavior. A
+live Windows GUI test with multiple audio tracks is still recommended before
+considering the fix fully verified in actual editing use.

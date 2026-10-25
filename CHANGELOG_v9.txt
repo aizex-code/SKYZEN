@@ -1,0 +1,43 @@
+SKYZEN V9 — SINGLE-DECODER PREVIEW + MODULAR EXPORT
+==================================================
+
+Playback rewrite
+----------------
+- Removed the previous per-overlay QMediaPlayer/QGraphicsVideoItem engine.
+- Added app/video_engine/project_snapshot.py for immutable timeline snapshots.
+- Added app/video_engine/ffmpeg_backend.py for composited still and project
+  preview command generation.
+- Added app/video_engine/render_worker.py to run FFmpeg away from the UI thread.
+- Added app/video_engine/controller.py to manage the preview cache, one
+  QMediaPlayer, scrubbing, play/pause, and timeline synchronization.
+- Kept app/player_panel/multitrack_engine.py as a compatibility adapter so
+  existing PlayerPanel and TimelinePanel signals do not need to be rewritten.
+- Added app/player_panel/preview_frame.py for a resize-aware paused preview.
+- Removed multimedia decoder imports from timeline_panel/core.py; the timeline
+  now publishes model state but does not import or create media players.
+
+Structure
+---------
+- Extracted InspectorPanel from main_window/main.py into app/inspector_panel.
+- Extracted shared palette and stylesheet into app/ui/theme.py.
+- Added app/export with H.264/MP4, HEVC/MP4, ProRes/MOV, and VP9/WebM profiles.
+- Added export resolution and quality controls.
+- Added regression tests for project snapshots, filter graph generation, and
+  codec options.
+
+Playback behavior
+-----------------
+- Paused scrubbing renders one composite PNG asynchronously.
+- Play renders the whole timeline to a temporary 720p H.264/AAC preview MP4,
+  then plays it using one QMediaPlayer.
+- The cache is keyed by project/source signature and pruned to about 1 GiB.
+- Original media files are never overwritten or transcoded during import.
+
+Validation
+----------
+- 43 Python files pass syntax parsing/compilation.
+- 9 regression tests pass.
+- FFmpeg full-composite render, paused-frame render, audio mixing, image overlay,
+  and ProRes export command were exercised against generated test media.
+- PySide6 was not installed in the build environment, so the actual Windows GUI
+  and native QMediaPlayer display could not be tested here.
