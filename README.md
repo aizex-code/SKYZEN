@@ -8,6 +8,11 @@ Skyzen is developed as a community project. Bug reports, documentation, testing,
 
 > **License:** Skyzen uses the Skyzen Community Non-Commercial License (SCNCL) 1.0. You may use, study, modify, and share Skyzen for non-commercial purposes under its terms. Selling Skyzen, paid builds, premium upgrades, or paid access to modified versions is prohibited. This is source-available software, not an OSI-approved open-source license. Read [LICENSE.md](LICENSE.md).
 
+## Screenshots
+
+![Skyzen video editor interface](docs/images/skyzen-demo.png)
+
+
 ## What is included
 
 - Python source code and modular editor panels
@@ -104,6 +109,3 @@ The Skyzen license does not override third-party licenses. In particular, `docs/
 - `docs/THIRD_PARTY_AUDIT.md` — third-party review checklist
 
 
-## Screenshots
-
-![Skyzen video editor interface](docs/images/skyzen-demo.png)
